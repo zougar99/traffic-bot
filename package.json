@@ -1,0 +1,37 @@
+{
+  "name": "wgtb",
+  "productName": "WGTB",
+  "version": "1.0.0",
+  "description": "WGTB (Web Growth Traffic Bot) — desktop traffic lab: Selenium Chrome sessions, proxy rotation, search modes, Telegram alerts.",
+  "keywords": [
+    "wgtb",
+    "traffic",
+    "electron",
+    "selenium",
+    "proxy",
+    "chromedriver",
+    "telegram",
+    "webdriver"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:telegram": "node scripts/test-telegram.js"
+  },
+  "author": "werlist99",
+  "developer": {
+    "name": "werlist99",
+    "telegram": "https://t.me/werlist99"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "chromedriver": "^147.0.0",
+    "selenium-webdriver": "^4.10.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "electron": "^26.0.0"
+  }
+}

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WGTB — Web Growth Traffic Bot</title>
+    <link rel="icon" type="image/png" href="./assets/wgtb-icon.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+    --bg: #0a0e14;
+    --surface: #131920;
+    --surface2: #1a2330;
+    --border: #2a3548;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --accent: #22d3ee;
+    --accent2: #3b82f6;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d29922;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 8px 32px rgba(0,0,0,.45);
+}
+html,body{height:100%}
+body{
+    font-family: 'Segoe UI',system-ui,-apple-system,sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:12px;
+    min-height:100vh;
+}
+#app-panel{
+    width:420px;
+    max-width:100%;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+.panel-inner{padding:20px 22px 24px}
+.header{text-align:center;margin-bottom:16px}
+.header img{max-width:100%;height:auto}
+.header p{margin:4px 0 0;font-size:.75rem;color:var(--text2);font-weight:500;letter-spacing:.04em}
+#app-version{font-size:.65rem;color:var(--text2);margin-top:4px}
+#dev-tg-link{cursor:pointer;text-decoration:underline;color:var(--accent)}
+.alert{
+    display:none;padding:10px 14px;border-radius:var(--radius-sm);
+    font-size:.78rem;margin-bottom:12px;line-height:1.4
+}
+.alert-success{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25)}
+.alert-danger{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.25)}
+.alert-warning{background:rgba(210,153,34,.12);color:var(--orange);border:1px solid rgba(210,153,34,.25)}
+.alert-secondary{background:rgba(139,148,158,.12);color:var(--text2);border:1px solid rgba(139,148,158,.2)}
+
+.section{margin-bottom:16px}
+.section-title{
+    font-size:.7rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--text2);margin-bottom:8px;
+    display:flex;align-items:center;gap:8px
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.input-group{
+    display:flex;margin-bottom:8px;border-radius:var(--radius-sm);
+    border:1px solid var(--border);overflow:hidden;
+    transition:border-color .2s,box-shadow .2s
+}
+.input-group:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.15)}
+.input-group-text{
+    display:flex;align-items:center;padding:0 10px;
+    font-size:.72rem;font-weight:600;color:var(--text2);
+    background:var(--surface2);white-space:nowrap;
+    border-right:1px solid var(--border);min-width:60px;justify-content:center
+}
+.input-group .form-control,.input-group select,.input-group input[type="text"]{
+    flex:1;padding:8px 10px;background:transparent;border:none;
+    color:var(--text);font-size:.82rem;outline:none;min-width:0;
+    font-family:inherit
+}
+.input-group select{
+    appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b949e'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;padding-right:28px
+}
+.input-group select option{background:var(--surface);color:var(--text)}
+input[type="text"]::placeholder{color:var(--text2);opacity:.5}
+
+.input-group .btn-outline-secondary{
+    background:transparent;border:none;color:var(--text2);
+    cursor:pointer;padding:0 10px;font-size:1rem;
+    display:flex;align-items:center;transition:color .15s
+}
+.input-group .btn-outline-secondary:hover{color:var(--text)}
+
+#url-favicon-wrap{display:none;min-width:36px;justify-content:center;padding:0 6px}
+#url-favicon{border-radius:4px;width:18px;height:18px}
+#direct-url-hint{font-size:.68rem;color:var(--text2);margin-bottom:8px}
+
+.extra-url-row .input-group-text{min-width:32px;font-size:.7rem}
+.btn-remove-extra{
+    background:transparent;border:none;color:var(--red);
+    cursor:pointer;padding:0 12px;font-size:1.1rem;line-height:1;
+    transition:opacity .15s;opacity:.7
+}
+.btn-remove-extra:hover{opacity:1}
+
+.btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    gap:6px;border:1px solid transparent;border-radius:var(--radius-sm);
+    font-size:.78rem;font-weight:600;padding:8px 16px;
+    cursor:pointer;transition:all .15s;font-family:inherit;
+    white-space:nowrap
+}
+.btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#0a0e14;border:none
+}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-danger{
+    background:var(--red);color:#fff;border:none
+}
+.btn-danger:hover{opacity:.9}
+.btn-sm{font-size:.72rem;padding:5px 11px}
+.btn-outline-primary{
+    background:transparent;border-color:var(--border);color:var(--accent)
+}
+.btn-outline-primary:hover{background:rgba(34,211,238,.08);border-color:var(--accent)}
+.btn-outline-secondary{
+    background:transparent;border-color:var(--border);color:var(--text2)
+}
+.btn-outline-secondary:hover{background:var(--surface2);color:var(--text)}
+.btn-secondary{
+    background:var(--surface2);border-color:var(--border);color:var(--text)
+}
+.btn-secondary:hover{background:var(--border)}
+.btn-dark{
+    background:var(--border);border-color:var(--border);color:var(--text)
+}
+.btn-dark:hover{background:#3a4a60}
+.btn-outline-dark{
+    background:transparent;border-color:var(--border);color:var(--text2)
+}
+.btn-outline-dark:hover{background:var(--surface2);color:var(--text)}
+
+.d-flex{display:flex}
+.gap-1{gap:4px}
+.gap-2{gap:8px}
+.flex-fill{flex:1}
+.flex-wrap{flex-wrap:wrap}
+.justify-content-center{justify-content:center}
+.mb-1{margin-bottom:4px}
+.mb-2{margin-bottom:8px}
+.mb-3{margin-bottom:12px}
+.my-2{margin:8px 0}
+.fw-bold{font-weight:700}
+.text-center{text-align:center}
+.text-dark{color:var(--text)}
+.small{font-size:.78rem}
+.text-muted{color:var(--text2)}
+
+.form-check{
+    display:flex;align-items:center;gap:8px;padding:3px 0;cursor:pointer
+}
+.form-check input[type="checkbox"]{
+    appearance:none;width:16px;height:16px;border:1.5px solid var(--border);
+    border-radius:4px;cursor:pointer;position:relative;flex-shrink:0;
+    transition:all .15s;background:var(--surface2)
+}
+.form-check input[type="checkbox"]:checked{
+    background:var(--accent);border-color:var(--accent)
+}
+.form-check input[type="checkbox"]:checked::after{
+    content:'';position:absolute;top:2px;left:5px;width:4px;height:8px;
+    border:solid #0a0e14;border-width:0 2px 2px 0;transform:rotate(45deg)
+}
+.form-check-label{font-size:.78rem;color:var(--text);cursor:pointer}
+.form-check .small.text-muted{
+    font-size:.68rem;margin-left:24px;margin-top:-2px;margin-bottom:4px
+}
+
+.btn-group{display:flex;gap:8px;margin-bottom:12px}
+.btn-group .btn{flex:1}
+
+.toolbar{
+    display:flex;flex-wrap:wrap;gap:4px;justify-content:center
+}
+.toolbar .btn{font-size:.7rem;padding:4px 10px}
+
+hr{border:none;border-top:1px solid var(--border);margin:12px 0}
+#dev-summary{font-size:.68rem;color:var(--text2);margin-bottom:8px}
+
+/* transition helpers */
+.smooth{transition:all .2s}
+</style>
+</head>
+<body>
+    <main id="app-panel">
+        <div class="panel-inner">
+            <div class="header">
+                <img src="./assets/wgtb-logo.svg" width="180" height="44" alt="WGTB">
+                <p>Web Growth Traffic Bot</p>
+                <div id="app-version"></div>
+            </div>
+
+            <div class="alert" role="alert" id="alert"></div>
+
+            <div class="section">
+                <div class="section-title">Target</div>
+                <div class="input-group">
+                    <span class="input-group-text" id="url-favicon-wrap" style="display:none">
+                        <img id="url-favicon" src="" alt="" width="18" height="18" style="border-radius:4px">
+                    </span>
+                    <span class="input-group-text">URL</span>
+                    <input type="text" id="url" class="form-control" placeholder="https://…">
+                    <button type="button" class="btn-outline-secondary px-2" id="url-open-default-browser" style="display:none" title="Open in browser">↗</button>
+                </div>
+                <p id="direct-url-hint" class="small text-muted" style="display:none">Direct: uncheck headless to see Chrome. ↗ = system browser.</p>
+                <div id="extra-urls-list" class="mb-2"></div>
+                <button type="button" class="btn btn-outline-primary btn-sm" id="btn-add-link" style="width:100%">+ Add URL</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Config</div>
+                <div class="input-group" id="keyboard" style="display:none">
+                    <span class="input-group-text">KEYWORD</span>
+                    <input type="text" id="keyboard-i" class="form-control" placeholder="Google / Proxy search">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">COUNT</span>
+                    <input type="text" id="count" class="form-control" value="1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">PROXIES</span>
+                    <input type="text" id="proxys" class="form-control" disabled>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">COMMENTS</span>
+                    <input type="text" id="comments-total" class="form-control" disabled>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Session</div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="session-headless">
+                    <label class="form-check-label" for="session-headless">Headless (hide Chrome)</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="session-email-rotate" checked>
+                    <label class="form-check-label" for="session-email-rotate">Rotate emails</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">Pause (s)</span>
+                    <input type="text" id="session-pause" class="form-control" value="0">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">After load (s)</span>
+                    <input type="text" id="session-after-load" class="form-control" value="1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">Dwell (s)</span>
+                    <input type="text" id="session-dwell" class="form-control" value="2.5">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">Mode</span>
+                    <select id="option" class="form-select">
+                        <option value="Direct">Direct</option>
+                        <option value="Google">Google Search</option>
+                        <option value="Proxy">Proxy Server</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Engagement</div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="engage-like">
+                    <label class="form-check-label" for="engage-like">Like</label>
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="engage-comment">
+                    <label class="form-check-label" for="engage-comment">Comment</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="engage-comment-file">
+                    <label class="form-check-label" for="engage-comment-file">Random from comments/</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">Fallback</span>
+                    <input type="text" id="engage-comment-text" class="form-control" placeholder="Comment text" maxlength="2000">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" id="start">▶ Start</button>
+                <button type="button" class="btn btn-danger" id="stop">■ Stop</button>
+            </div>
+
+            <hr>
+            <div class="text-center small fw-bold mb-2 section-title">Tools</div>
+            <div class="toolbar mb-2">
+                <button type="button" class="btn btn-secondary" id="tool-refresh-proxy">Proxies</button>
+                <button type="button" class="btn btn-secondary" id="tool-open-folder">Proxy folder</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-open-comments">Comments</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-clear">Clear</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-check-driver">ChromeDriver</button>
+                <button type="button" class="btn btn-dark" id="tool-devtools">DevTools</button>
+            </div>
+
+            <hr>
+            <div class="text-center small fw-bold mb-2 section-title">Developer</div>
+            <p id="dev-summary" class="text-center small text-muted mb-2"></p>
+            <div class="toolbar">
+                <button type="button" class="btn btn-primary" id="tool-dev-telegram">Telegram</button>
+                <button type="button" class="btn btn-outline-dark" id="tool-dev-diagnostics">Copy diag</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-dev-userdata">userData</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-dev-reload">Reload UI</button>
+            </div>
+        </div>
+    </main>
+    <script src="./renderer.js"></script>
+</body>
+</html>
