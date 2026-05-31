@@ -1,8 +1,8 @@
-# WGTB — Web Growth Traffic Bot
+# Traffic Bot
 
-**Developer:** [@werlist99](https://t.me/werlist99) on Telegram.
+**Developer:** [@werlist99](https://t.me/werlist99)
 
-Desktop **traffic lab**: controlled Chrome sessions via Selenium, rotating proxies, optional Google/proxy search flows, and Telegram notifications. Built with Electron.
+Desktop traffic lab: controlled Chrome sessions via Selenium, rotating proxies, optional Google/proxy search flows, and Telegram notifications. Built with Electron.
 
 ---
 
@@ -31,7 +31,7 @@ Desktop **traffic lab**: controlled Chrome sessions via Selenium, rotating proxi
 ## Install & run
 
 ```bash
-cd google-traffic-bot
+cd traffic-bot
 npm install
 npm start
 ```

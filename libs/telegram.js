@@ -103,7 +103,7 @@ function startTelegramBot() {
                   ]
                 : []
         return replyHtml(ctx, [
-            '🤖 <b>WGTB</b> <i>(Web Growth Traffic Bot)</i>',
+            '🤖 <b>Traffic Bot</b>',
             '',
             ...devLine,
             '⚡ Commandes rapides :',

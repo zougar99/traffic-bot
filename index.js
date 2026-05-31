@@ -18,7 +18,7 @@ function isValidEmailAddress(s) {
 const pkg = require('./package.json')
 const { startTelegramBot, stopTelegramBot } = require('./libs/telegram')
 
-const APP_TITLE = pkg.productName || 'WGTB'
+const APP_TITLE = pkg.productName || 'Traffic Bot'
 const ICON_PATH = path.join(__dirname, 'assets', 'wgtb-icon.png')
 
 function buildAppMenu() {
@@ -50,7 +50,7 @@ function buildAppMenu() {
                         await dialog.showMessageBox({
                             type: 'info',
                             title: APP_TITLE,
-                            message: APP_TITLE + ' — Web Growth Traffic Bot',
+                            message: APP_TITLE + ' — Traffic Bot',
                             detail:
                                 'Version ' +
                                 pkg.version +

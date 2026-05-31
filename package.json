@@ -1,10 +1,10 @@
 {
-  "name": "wgtb",
-  "productName": "WGTB",
+  "name": "traffic-bot",
+  "productName": "Traffic Bot",
   "version": "1.0.0",
-  "description": "WGTB (Web Growth Traffic Bot) — desktop traffic lab: Selenium Chrome sessions, proxy rotation, search modes, Telegram alerts.",
+  "description": "Traffic Bot — desktop traffic lab: Selenium Chrome sessions, proxy rotation, search modes, Telegram alerts.",
   "keywords": [
-    "wgtb",
+    "traffic-bot",
     "traffic",
     "electron",
     "selenium",

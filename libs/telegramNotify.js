@@ -24,7 +24,7 @@ async function sendHtmlToAllowedChats(html) {
 async function notifyDesktopRunStart(opts) {
     var urls = opts.urls || []
     var lines = [
-        '🖥 <b>WGTB</b>',
+        '🖥 <b>Traffic Bot</b>',
         '<i>Lancement depuis l’application</i>',
         '',
         '⚡ <b>Mode</b> — <code>' + escapeHtml(String(opts.option || '')) + '</code>',
