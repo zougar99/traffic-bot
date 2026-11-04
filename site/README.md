@@ -24,12 +24,23 @@ python3 -m http.server 4180 --directory site
 
 ## Deploy
 
-Pushes to `main` that touch `site/**` trigger `.github/workflows/pages.yml`,
-which publishes the `site/` folder to GitHub Pages:
+Pushes to `main` that touch `site/**` (or a manual *Run workflow*) trigger
+`.github/workflows/pages.yml`, which publishes this folder to the `gh-pages`
+branch using the workflow token — no build step, no Pages permission needed.
 
-**https://zougar99.github.io/traffic-bot/**
+**One-time step (owner only):** GitHub does not serve a `gh-pages` branch until
+Pages is switched on for the repository.
 
-The workflow needs **Settings → Pages → Source = GitHub Actions** (one-time).
+1. Open <https://github.com/zougar99/traffic-bot/settings/pages>
+2. **Source** → *Deploy from a branch*
+3. **Branch** → `gh-pages` · folder `/ (root)` → **Save**
+
+After a minute the site is live at **https://zougar99.github.io/traffic-bot/**
+(deploys after that are fully automatic).
+
+> Why not `actions/deploy-pages`? That flow requires *Settings → Pages → Source:
+> GitHub Actions* **and** the `pages: write` permission; the branch flow keeps the
+> workflow runnable from forks and from tokens without Pages scope.
 
 ## Editing notes
 
