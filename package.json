@@ -17,8 +17,9 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --enable-logging",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "test:telegram": "node scripts/test-telegram.js"
+    "test": "node scripts/smoke.js",
+    "test:telegram": "node scripts/test-telegram.js",
+    "site": "python3 -m http.server 4180 --directory site"
   },
   "author": "werlist99",
   "developer": {
@@ -33,5 +34,16 @@
   },
   "devDependencies": {
     "electron": "^26.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://zougar99.github.io/traffic-bot/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zougar99/traffic-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zougar99/traffic-bot/issues"
   }
 }
