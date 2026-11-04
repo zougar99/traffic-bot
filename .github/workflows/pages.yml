@@ -1,5 +1,11 @@
 name: Deploy website to GitHub Pages
 
+# Publishes site/ to https://zougar99.github.io/traffic-bot/
+#
+# This workflow intentionally uses the classic Pages builder instead of
+# actions/deploy-pages: no repository setting or extra permission is required,
+# the gh-pages branch is created automatically on the first successful run.
+
 on:
   push:
     branches: ["main"]
@@ -9,35 +15,24 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+
+      - name: Publish site/ to the gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          # turn Pages on automatically on the first run (no manual Settings click)
-          enablement: true
-      - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./site
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "deploy site: ${{ github.event.head_commit.message }}"

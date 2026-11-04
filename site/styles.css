@@ -1214,7 +1214,7 @@ h2.title {
   stroke-linejoin: round;
 }
 
-.chart__area { fill: url(#chartArea); }
+.chart__area { fill: url(#chartAreaFill); }
 
 .sim__log {
   margin-top: 16px;
