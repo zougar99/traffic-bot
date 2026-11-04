@@ -1,3 +1,9 @@
 
 /node_modules
 telegram.config.json
+
+# local data (keep the examples)
+/proxy/*
+!/proxy/pool.example.txt
+/email/*
+!/email/emails.example.txt

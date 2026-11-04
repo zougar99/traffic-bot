@@ -23,6 +23,30 @@ function pickRoundRobin(list, idx) {
     return list[idx % list.length]
 }
 
+/**
+ * Proxy entries may be written as "host:port", "user:pass@host:port",
+ * "http://host:port" or "socks5://host:port". Normalise to a URL Chrome accepts.
+ */
+function normalizeProxy(entry) {
+    var raw = String(entry || '').trim()
+    if (!raw || raw.charAt(0) === '#') return ''
+    if (!/^[a-z0-9]+:\/\//i.test(raw)) raw = 'http://' + raw
+    try {
+        var u = new URL(raw)
+        if (!u.hostname || !u.port) return ''
+        return (
+            u.protocol +
+            '//' +
+            (u.username ? u.username + (u.password ? ':' + u.password : '') + '@' : '') +
+            u.hostname +
+            ':' +
+            u.port
+        )
+    } catch (e) {
+        return ''
+    }
+}
+
 function makeEngage(base, comments, sessionOpts, sessionIndex) {
     var text = String(base.commentText || '').trim()
     if (base.comment && sessionOpts.useCommentFile && comments.length) {
@@ -252,7 +276,8 @@ async function Direct(url, proxy, headless, engage, timing, sessionEmail) {
     var driver
     try {
         var options = new chrome.Options()
-        if (proxy) options.addArguments('--proxy-server=http://' + proxy)
+        var px = normalizeProxy(proxy)
+        if (px) options.addArguments('--proxy-server=' + px)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
         driver = await new webDriver.Builder()
@@ -276,7 +301,8 @@ async function googleSearch(url, keyboard, proxy, headless, engage, timing, sess
     var driver
     try {
         var options = new chrome.Options()
-        if (proxy) options.addArguments('--proxy-server=http://' + proxy)
+        var px = normalizeProxy(proxy)
+        if (px) options.addArguments('--proxy-server=' + px)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
         driver = await new webDriver.Builder()
@@ -303,10 +329,12 @@ async function googleSearch(url, keyboard, proxy, headless, engage, timing, sess
     }
 }
 
-async function proxyServer(url, keyboard, headless, engage, timing, sessionEmail) {
+async function proxyServer(url, proxy, keyboard, headless, engage, timing, sessionEmail) {
     var driver
     try {
         var options = new chrome.Options()
+        var px2 = normalizeProxy(proxy)
+        if (px2) options.addArguments('--proxy-server=' + px2)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
         driver = await new webDriver.Builder()
@@ -467,7 +495,7 @@ async function runOneUrlBatch(
         try {
             if (option === 'Direct') await Direct(url, p, headless, engage, timing, em)
             else if (option === 'Google') await googleSearch(url, keyboard, p, headless, engage, timing, em)
-            else if (option === 'Proxy') await proxyServer(url, keyboard, headless, engage, timing, em)
+            else if (option === 'Proxy') await proxyServer(url, p, keyboard, headless, engage, timing, em)
         } catch (e) {
             console.error('[session]', usedDriver, 'failed:', e && e.message ? e.message : e)
         }

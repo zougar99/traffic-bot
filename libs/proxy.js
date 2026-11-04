@@ -1,37 +1,51 @@
 const fs = require('fs');
+const path = require('path');
 
-module.exports = function () {
-    const proxyList = []; // Fixed typo: changed 'porxyList' to 'proxyList'
-    const path = "./proxy/";
+/**
+ * Reads every file inside `proxy/` and returns the proxy pool.
+ * Blank lines, `#` comments and duplicates are ignored, so a trailing
+ * newline never inflates the proxy count shown in the UI.
+ *
+ * Accepted formats:
+ *   1.2.3.4:8080
+ *   user:pass@1.2.3.4:8080
+ *   http://1.2.3.4:8080
+ *   socks5://1.2.3.4:1080
+ *
+ * @returns {Promise<string[]>}
+ */
+module.exports = function loadProxies() {
+    const dir = path.join(__dirname, '..', 'proxy');
+    const seen = new Set();
+    const proxyList = [];
 
-    return new Promise(function (resolve, reject) {
-        fs.readdir(path, (err, files) => {
+    return new Promise(function (resolve) {
+        fs.readdir(dir, (err, files) => {
             if (err) {
-                console.error("Error reading directory:", err);
-                return resolve([]); // Resolve with an empty array on error
+                // folder missing or unreadable — an empty pool is a valid state
+                return resolve([]);
             }
 
-            if (files && files.length > 0) {
-                let pendingFiles = files.length; // Track the number of pending reads
-                files.forEach((fileName) => {
-                    fs.readFile(`${path}${fileName}`, 'utf8', (error, data) => {
-                        if (error) {
-                            console.error("Error reading file:", error);
-                        } else {
-                            const plist = data.toString().split("\n"); // Split file content by newlines
-                            proxyList.push(...plist); // Add all proxies to the proxyList
-                        }
+            const names = (files || []).filter((name) => !name.startsWith('.'));
+            if (!names.length) return resolve([]);
 
-                        // Decrement pending files and resolve when all files are processed
-                        pendingFiles--;
-                        if (pendingFiles === 0) {
-                            resolve(proxyList);
-                        }
-                    });
+            let pending = names.length;
+            names.forEach((fileName) => {
+                fs.readFile(path.join(dir, fileName), 'utf8', (error, data) => {
+                    if (!error && data) {
+                        data.split(/\r?\n/)
+                            .map((line) => line.trim())
+                            .filter((line) => line && !line.startsWith('#'))
+                            .forEach((line) => {
+                                if (seen.has(line)) return;
+                                seen.add(line);
+                                proxyList.push(line);
+                            });
+                    }
+                    pending -= 1;
+                    if (pending === 0) resolve(proxyList);
                 });
-            } else {
-                resolve([]); // Resolve with an empty array if no files are in the directory
-            }
+            });
         });
     });
 };

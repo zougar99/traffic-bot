@@ -1,0 +1,1 @@
+# One email per line: name@domain.com

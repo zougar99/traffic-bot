@@ -23,8 +23,8 @@ function scroll() {
             else
                 scrollDown = true;
         }
-        window.scrollTo(0, (scrollHeight > scrollLimit ? scrollLimit : scrollHeight < 0 ? 0 : scrollHeight))
-    }, 1000)
+        window.scrollTo({ top: (scrollHeight > scrollLimit ? scrollLimit : scrollHeight < 0 ? 0 : scrollHeight), behavior: 'smooth' })
+    }, random(700, 1400))
     `
 }
 

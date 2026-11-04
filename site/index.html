@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Traffic Bot — Desktop Traffic Lab for SEO &amp; Analytics Testing</title>
+<meta name="description" content="Traffic Bot is an Electron + Selenium desktop lab for SEO testing and analytics validation: proxy rotation, human-like behavior, search-engine modes, engagement automation and Telegram control.">
+<meta name="author" content="werlist99">
+<meta name="theme-color" content="#070b11">
+<link rel="canonical" href="https://zougar99.github.io/traffic-bot/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Traffic Bot — Desktop Traffic Lab">
+<meta property="og:description" content="Proxy rotation, human-like browsing, search modes, engagement tools and Telegram control — a self-hosted traffic simulation lab.">
+<meta property="og:url" content="https://zougar99.github.io/traffic-bot/">
+<meta property="og:image" content="https://zougar99.github.io/traffic-bot/assets/og-card.png">
+<meta property="og:site_name" content="Traffic Bot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Traffic Bot — Desktop Traffic Lab">
+<meta name="twitter:description" content="Electron + Selenium traffic simulation lab with proxy rotation, stealth browsing and Telegram control.">
+
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Traffic Bot",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Windows, Linux",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Desktop traffic simulation lab built with Electron and Selenium: proxy rotation, human-like browsing, search-engine modes, engagement automation and Telegram control.",
+  "url": "https://zougar99.github.io/traffic-bot/",
+  "codeRepository": "https://github.com/zougar99/traffic-bot",
+  "license": "https://github.com/zougar99/traffic-bot/blob/main/LICENSE",
+  "author": { "@type": "Person", "name": "werlist99", "url": "https://t.me/werlist99" }
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- ambient background -->
+<div class="bg-fx" aria-hidden="true">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <div class="shell">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Traffic Bot home">
+        <img class="brand__mark" src="assets/icon.svg" alt="" width="34" height="34">
+        <span class="brand__name">Traffic<span>Bot</span></span>
+      </a>
+
+      <ul class="nav__links">
+        <li><a class="nav__link" href="#features">Features</a></li>
+        <li><a class="nav__link" href="#modes">Modes</a></li>
+        <li><a class="nav__link" href="#how">How it works</a></li>
+        <li><a class="nav__link" href="#lab">Live lab</a></li>
+        <li><a class="nav__link" href="#install">Install</a></li>
+        <li><a class="nav__link" href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav__actions">
+        <a class="nav__gh" href="https://github.com/zougar99/traffic-bot" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          <span>GitHub</span>
+          <span class="stars" data-stars>★ —</span>
+        </a>
+        <a class="btn btn--primary btn--sm" href="#install">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          <span>Get started</span>
+        </a>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu" data-open="false">
+    <a href="#features">Features</a>
+    <a href="#modes">Modes</a>
+    <a href="#how">How it works</a>
+    <a href="#lab">Live lab</a>
+    <a href="#install">Install</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn btn--primary btn--block" href="https://github.com/zougar99/traffic-bot" target="_blank" rel="noopener">Open on GitHub</a>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="shell hero__grid">
+    <div>
+      <span class="badge"><i class="badge__dot"></i> v1.0.0 · Electron + Selenium · MIT</span>
+      <h1>Simulate real traffic.<br>Read the signal, <em>not the noise.</em></h1>
+      <p class="hero__lede">
+        Traffic Bot is a self-hosted desktop lab for SEO testing and analytics validation.
+        It spins up browser sessions behind a rotating proxy pool, mimics human behavior,
+        drives search-engine paths, and reports every run straight to Telegram.
+      </p>
+
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="https://github.com/zougar99/traffic-bot/releases" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+          Download the app
+        </a>
+        <a class="btn btn--ghost" href="#lab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 3 14 9-14 9V3Z"/></svg>
+          Try the live lab
+        </a>
+      </div>
+
+      <ul class="hero__meta">
+        <li><b>0</b> cloud dependency</li>
+        <li><b>3</b> operating modes</li>
+        <li><b>4</b> search engines</li>
+        <li><b>Win / Linux</b></li>
+      </ul>
+    </div>
+
+    <!-- app mockup -->
+    <div class="mock" aria-hidden="true">
+      <div class="mock__window">
+        <div class="mock__bar">
+          <div class="mock__dots"><i></i><i></i><i></i></div>
+          <div class="mock__url">traffic-bot — desktop</div>
+        </div>
+
+        <div class="mock__body">
+          <div class="mock__head">
+            <img class="mock__logo" src="assets/icon.svg" alt="">
+            <div class="mock__titles">
+              <b>Traffic Bot</b>
+              <span>v1.0.0 · Electron 26</span>
+            </div>
+            <span class="mock__status"><i></i> running</span>
+          </div>
+
+          <div class="field">
+            <label>Target URL</label>
+            <div class="field__box"><span>https://your-site.com/landing</span><i class="caret"></i></div>
+          </div>
+
+          <div class="mock__row">
+            <div class="field">
+              <label>Keyword</label>
+              <div class="field__box"><span>best seo tools</span></div>
+            </div>
+            <div class="field">
+              <label>Sessions</label>
+              <div class="field__box"><span>25</span></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Mode</label>
+            <div class="segmented">
+              <span class="on">Google</span><span>Direct</span><span>Proxy</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Engagement</label>
+            <div class="chips">
+              <span class="chip chip--toggle on">Like</span>
+              <span class="chip chip--toggle on">Comment</span>
+              <span class="chip chip--toggle">Rotate email</span>
+              <span class="chip">Headless</span>
+            </div>
+          </div>
+
+          <div class="mock__actions">
+            <div class="mock__btn mock__btn--go">▶ Start run</div>
+            <div class="mock__btn mock__btn--stop">■ Stop</div>
+          </div>
+
+          <div class="mock__stats">
+            <div><b>18/25</b><small>sessions</small></div>
+            <div><b>7</b><small>proxies</small></div>
+            <div><b>94%</b><small>success</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-card float-card--a">
+        <span class="float-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+        </span>
+        <div><b>Proxy rotated</b><small>residential · FR</small></div>
+      </div>
+
+      <div class="float-card float-card--b">
+        <span class="float-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </span>
+        <div><b>Telegram report</b><small>run completed · 0 errors</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span class="marquee__item">Electron 26</span>
+    <span class="marquee__item">Selenium WebDriver</span>
+    <span class="marquee__item">Undetected ChromeDriver</span>
+    <span class="marquee__item">HTTP / SOCKS5 proxies</span>
+    <span class="marquee__item">Fingerprint spoofing</span>
+    <span class="marquee__item">Telegraf bot</span>
+    <span class="marquee__item">Search engines</span>
+    <span class="marquee__item">HAR capture</span>
+  </div>
+  <div class="marquee__track">
+    <span class="marquee__item">Electron 26</span>
+    <span class="marquee__item">Selenium WebDriver</span>
+    <span class="marquee__item">Undetected ChromeDriver</span>
+    <span class="marquee__item">HTTP / SOCKS5 proxies</span>
+    <span class="marquee__item">Fingerprint spoofing</span>
+    <span class="marquee__item">Telegraf bot</span>
+    <span class="marquee__item">Search engines</span>
+    <span class="marquee__item">HAR capture</span>
+  </div>
+</div>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="features">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">Capabilities</span>
+      <h2 class="title">A full traffic lab, <span class="grad-text">not a black box</span></h2>
+      <p class="lede">Every layer is configurable and observable — from the proxy pool to the click pattern on a search result page. Nothing runs you can’t inspect.</p>
+    </div>
+
+    <div class="grid grid--3">
+      <article class="card reveal" data-delay="1">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.24 7.76-2.83 2.83"/><path d="M18 12h4"/><path d="m16.24 16.24-2.83-2.83"/><path d="M12 18v4"/><path d="m7.76 16.24 2.83-2.83"/><path d="M6 12H2"/><path d="m7.76 7.76 2.83 2.83"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Proxy rotation engine</h3>
+        <p>HTTP, HTTPS and SOCKS5 pools with round-robin selection, per-session assignment, folder-based proxy files and automatic fallback when a node dies.</p>
+      </article>
+
+      <article class="card reveal" data-delay="2">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3>Stealth layer</h3>
+        <p>Navigator patches, WebGL / Canvas / Audio fingerprint spoofing and randomized Chrome launch arguments to keep sessions consistent with a real device.</p>
+      </article>
+
+      <article class="card reveal" data-delay="3">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+        </div>
+        <h3>Human-like behavior</h3>
+        <p>Variable typing cadence, natural scroll curves, dwell time before engagement and configurable pauses between sessions — tuned per profile.</p>
+      </article>
+
+      <article class="card reveal" data-delay="1">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+        </div>
+        <h3>Search-engine modes</h3>
+        <p>Google, Bing, Yahoo and DuckDuckGo paths: type a keyword, parse the SERP, locate your domain and click through like an organic visitor.</p>
+      </article>
+
+      <article class="card reveal" data-delay="2">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 21l1.9-4.7A8.4 8.4 0 0 1 4 11.5 8.4 8.4 0 0 1 12.5 3 8.4 8.4 0 0 1 21 11.5Z"/></svg>
+        </div>
+        <h3>Engagement toolkit</h3>
+        <p>Optional like and comment actions with a comment library in <code>comments/</code>, plus rotating email identities loaded from <code>email/</code>.</p>
+      </article>
+
+      <article class="card reveal" data-delay="3">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </div>
+        <h3>Telegram control</h3>
+        <p>Run and stop campaigns from your phone with <code>/run</code> and <code>/stop</code>, check pool size with <code>/status</code>, and receive start / done / error reports.</p>
+      </article>
+
+      <article class="card reveal" data-delay="1">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 13h6"/><path d="M7 17h4"/></svg>
+        </div>
+        <h3>Session visibility</h3>
+        <p>Watch browsers run in GUI mode or go headless for background batches. Live console logs show proxy, email and mode for every session.</p>
+      </article>
+
+      <article class="card reveal" data-delay="2">
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+        </div>
+        <h3>Campaign batching</h3>
+        <p>Queue multiple target URLs and a session count per URL. The runner interleaves URLs across rounds so traffic never looks machine-shaped.</p>
+      </article>
+
+      <article class="card card--featured reveal" data-delay="3">
+        <span class="card__tag">local-first</span>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 22h8"/><path d="M12 18v4"/></svg>
+        </div>
+        <h3>Runs on your machine</h3>
+        <p>No SaaS account, no shared dashboard, no data leaving your device. Electron app, MIT-licensed source, your proxies and your rules.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODES ============ -->
+<section class="section section--tight" id="modes">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">Operating modes</span>
+      <h2 class="title">Three ways to reach a page</h2>
+      <p class="lede">Pick the path that matches the signal you’re testing. Each mode has its own session flow, timing controls and engagement hooks.</p>
+    </div>
+
+    <div class="modes">
+      <div class="modes__tabs" role="tablist" aria-label="Operating modes">
+        <button class="mode-tab" role="tab" aria-selected="true" aria-controls="panel-direct" id="tab-direct">
+          <span class="mode-tab__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+          </span>
+          <span><b>Direct</b><small>Hit the URL straight from a rotated proxy</small></span>
+        </button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="panel-google" id="tab-google">
+          <span class="mode-tab__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+          <span><b>Google search</b><small>Keyword → SERP → click your result</small></span>
+        </button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="panel-proxy" id="tab-proxy">
+          <span class="mode-tab__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </span>
+          <span><b>Proxy search</b><small>Keyword path through a proxy node</small></span>
+        </button>
+      </div>
+
+      <div>
+        <div class="mode-panel" role="tabpanel" id="panel-direct" aria-labelledby="tab-direct">
+          <h3>Direct navigation</h3>
+          <p>The fastest signal. The bot picks the next proxy from your pool, launches a stealth browser and lands on the target URL with realistic dwell time, scrolling and optional engagement.</p>
+          <ul class="mode-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Round-robin proxy assignment per session index</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Configurable delay after load before any action</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Best mode for analytics hit validation</li>
+          </ul>
+          <div class="code-line"><span class="prompt">›</span> mode: Direct · url: https://your-site.com · count: 25</div>
+        </div>
+
+        <div class="mode-panel" role="tabpanel" id="panel-google" aria-labelledby="tab-google" hidden>
+          <h3>Search-engine path</h3>
+          <p>The full organic journey. A keyword is typed at human speed, the result page is parsed for your domain, and the matching anchor is clicked — including pagination when the target sits deeper.</p>
+          <ul class="mode-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>SERP anchor detection with redirect unwrapping</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Page traversal when the result isn’t on page one</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Works across Google, Bing, Yahoo and DuckDuckGo</li>
+          </ul>
+          <div class="code-line"><span class="prompt">›</span> mode: Google · keyword: "best seo tools" · count: 10</div>
+        </div>
+
+        <div class="mode-panel" role="tabpanel" id="panel-proxy" aria-labelledby="tab-proxy" hidden>
+          <h3>Proxy-mediated search</h3>
+          <p>Search traffic routed through a dedicated proxy node, keeping the search engine, the SERP click and the landing page all on the same egress IP for a coherent session story.</p>
+          <ul class="mode-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Consistent IP from query to landing page</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Useful for geo-sensitive ranking checks</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Pair it with headless mode for long batches</li>
+          </ul>
+          <div class="code-line"><span class="prompt">›</span> mode: Proxy · keyword: "saas analytics" · count: 15</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section" id="how">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">Pipeline</span>
+      <h2 class="title">From config to report in eight steps</h2>
+      <p class="lede">The runner is a linear pipeline with a single guard: only one campaign executes at a time, so sessions never interfere with each other.</p>
+    </div>
+
+    <div class="pipeline">
+      <div class="step reveal" data-delay="1"><span class="step__num">01</span><b>Load config</b><p>URLs, keywords, proxies, emails, comments and timing are read from disk.</p></div>
+      <div class="step reveal" data-delay="2"><span class="step__num">02</span><b>Pick a proxy</b><p>The next node in the pool is assigned to this session index.</p></div>
+      <div class="step reveal" data-delay="3"><span class="step__num">03</span><b>Launch browser</b><p>Chrome starts with stealth flags, proxy config and a rotated profile.</p></div>
+      <div class="step reveal" data-delay="4"><span class="step__num">04</span><b>Navigate</b><p>Direct URL or search keyword, typed at a human cadence.</p></div>
+      <div class="step reveal" data-delay="1"><span class="step__num">05</span><b>Simulate</b><p>Scroll, dwell, click-through and optional like / comment actions.</p></div>
+      <div class="step reveal" data-delay="2"><span class="step__num">06</span><b>Log the session</b><p>Proxy, identity, mode and outcome are written to the console.</p></div>
+      <div class="step reveal" data-delay="3"><span class="step__num">07</span><b>Rotate</b><p>Browser closes, index advances, pause delay applies, next session begins.</p></div>
+      <div class="step reveal" data-delay="4"><span class="step__num">08</span><b>Report</b><p>Telegram receives a start card, then a done or error summary.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE LAB ============ -->
+<section class="section" id="lab">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">Interactive preview</span>
+      <h2 class="title">See a run <span class="grad-text">before you install</span></h2>
+      <p class="lede">A browser-side simulation of the runner’s behaviour. Set the session count, proxy pool size and pause, then run it. Numbers are modeled on the app’s real throughput.</p>
+    </div>
+
+    <div class="sim reveal" id="sim">
+      <div class="sim__panel">
+        <div class="sim__top">
+          <div class="sim__title"><span class="dot"></span><span id="simState">Idle — ready to run</span></div>
+          <div class="mono" style="font-size:.7rem;color:var(--text-3)" id="simClock">00:00</div>
+        </div>
+
+        <div class="sim__metrics">
+          <div class="metric"><small>Session</small><b id="mSession">0/0</b></div>
+          <div class="metric"><small>Success</small><b id="mSuccess" class="ok">0</b></div>
+          <div class="metric"><small>Failed</small><b id="mFailed" class="warn">0</b></div>
+          <div class="metric"><small>Proxy hit</small><b id="mProxy">—</b></div>
+        </div>
+
+        <div class="chart" aria-hidden="true">
+          <svg viewBox="0 0 600 156" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22d3ee"/>
+                <stop offset="100%" stop-color="#3b82f6"/>
+              </linearGradient>
+              <linearGradient id="chartArea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#22d3ee" stop-opacity=".32"/>
+                <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="chart__area" id="chartArea" d=""></path>
+            <path class="chart__line" id="chartLine" d=""></path>
+          </svg>
+        </div>
+
+        <div class="sim__log" id="simLog" role="log" aria-live="polite"></div>
+      </div>
+
+      <div class="sim__panel sim__panel--side">
+        <div class="control">
+          <div class="control__head"><label for="cCount">Sessions</label><output id="oCount">25</output></div>
+          <input type="range" id="cCount" min="5" max="120" step="5" value="25">
+        </div>
+
+        <div class="control">
+          <div class="control__head"><label for="cProxies">Proxy pool</label><output id="oProxies">8</output></div>
+          <input type="range" id="cProxies" min="1" max="40" step="1" value="8">
+        </div>
+
+        <div class="control">
+          <div class="control__head"><label for="cPause">Pause between sessions</label><output id="oPause">2s</output></div>
+          <input type="range" id="cPause" min="0" max="10" step="1" value="2">
+        </div>
+
+        <div class="control">
+          <div class="control__head"><label for="cMode">Mode</label></div>
+          <div class="select-wrap">
+            <select id="cMode">
+              <option value="Direct">Direct</option>
+              <option value="Google" selected>Google search</option>
+              <option value="Proxy">Proxy search</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn--primary btn--block" id="simRun">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 3 14 9-14 9V3Z"/></svg>
+          Start simulation
+        </button>
+        <p class="sim__hint">No install, no network calls — this runs entirely in your browser.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="section section--tight">
+  <div class="shell">
+    <div class="stats reveal">
+      <div class="stat"><b>~90</b><span>sessions / hour · 1 proxy</span></div>
+      <div class="stat"><b>~900</b><span>sessions / hour · 10 proxies</span></div>
+      <div class="stat"><b>20–40s</b><span>average session length</span></div>
+      <div class="stat"><b>150 MB</b><span>RAM per browser session</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="section" id="install">
+  <div class="shell">
+    <div class="install">
+      <div class="reveal">
+        <span class="eyebrow">Get started</span>
+        <h2 class="title">Running in three minutes</h2>
+        <p class="lede">You need Node.js 18+, Google Chrome and a proxy list. Telegram is optional but recommended if you want remote control.</p>
+
+        <ol class="steps-list">
+          <li><span class="n">1</span><div><b>Clone the repository</b><p>Or download the latest release archive.</p></div></li>
+          <li><span class="n">2</span><div><b>Install dependencies</b><p>Electron, Selenium WebDriver and ChromeDriver are pulled in.</p></div></li>
+          <li><span class="n">3</span><div><b>Drop your proxies</b><p>One per line in <code>proxy/</code> — HTTP, HTTPS or SOCKS5.</p></div></li>
+          <li><span class="n">4</span><div><b>Launch the app</b><p>Add a URL, choose a mode, press Start.</p></div></li>
+          <li><span class="n">5</span><div><b>Optional · Telegram</b><p>Copy the example config, add your token and chat IDs.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="code-card reveal" data-delay="2">
+        <div class="code-card__tabs" role="tablist" aria-label="Install snippets">
+          <button role="tab" aria-selected="true" data-code="clone">clone</button>
+          <button role="tab" aria-selected="false" data-code="telegram">telegram</button>
+          <button role="tab" aria-selected="false" data-code="proxies">proxies</button>
+          <button class="code-card__copy" id="copyBtn" aria-label="Copy code">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Copy
+          </button>
+        </div>
+
+        <div class="code-panel" id="code-clone">
+<pre><span class="c"># 1 — clone and install</span>
+<span class="k">git</span> clone https://github.com/zougar99/traffic-bot.git
+<span class="k">cd</span> traffic-bot
+<span class="k">npm</span> install
+
+<span class="c"># 2 — launch the desktop app</span>
+<span class="k">npm</span> start
+
+<span class="c"># 3 — optional: verify Telegram wiring</span>
+<span class="k">npm</span> run test:telegram</pre>
+        </div>
+
+        <div class="code-panel" id="code-telegram" hidden>
+<pre><span class="c"># telegram.config.json</span>
+{
+  <span class="s">"botToken"</span>: <span class="s">"123456:ABC-DEF..."</span>,
+  <span class="s">"allowedChatIds"</span>: [<span class="n">123456789</span>]
+}
+
+<span class="c"># in Telegram</span>
+<span class="f">/myid</span>                       <span class="c"># get your chat id</span>
+<span class="f">/run</span> https://site.com 10 Google <span class="s">"keyword"</span>
+<span class="f">/status</span>                    <span class="c"># proxy pool size</span>
+<span class="f">/stop</span>                      <span class="c"># abort the run</span></pre>
+        </div>
+
+        <div class="code-panel" id="code-proxies" hidden>
+<pre><span class="c"># proxy/pool.txt — one entry per line</span>
+http://user:pass@1.2.3.4:8080
+socks5://5.6.7.8:1080
+9.10.11.12:3128
+http://user:pass@13.14.15.16:8000
+
+<span class="c"># the app reads every file inside proxy/</span>
+<span class="c"># blank lines are ignored</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="section section--tight" id="roadmap">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">Roadmap</span>
+      <h2 class="title">What ships next</h2>
+      <p class="lede">A transparent backlog — priorities shift with community feedback, not with a marketing calendar.</p>
+    </div>
+
+    <div class="roadmap">
+      <div class="road reveal"><span class="road__state state--done">shipped</span><div><b>Electron desktop UI + core runner</b><p>Proxy rotation, three modes, engagement, Telegram control.</p></div><span class="road__v">v1.0</span></div>
+      <div class="road reveal" data-delay="1"><span class="road__state state--wip">in progress</span><div><b>Session recorder</b><p>HAR capture, per-session screenshots and console logs.</p></div><span class="road__v">v1.1</span></div>
+      <div class="road reveal" data-delay="2"><span class="road__state state--wip">in progress</span><div><b>Mobile user-agent profiles</b><p>Chrome mobile and Safari iOS fingerprints.</p></div><span class="road__v">v1.1</span></div>
+      <div class="road reveal" data-delay="3"><span class="road__state state--next">planned</span><div><b>Keyword spinner</b><p>Synonym, typo and modifier variations for wider query coverage.</p></div><span class="road__v">v1.2</span></div>
+      <div class="road reveal"><span class="road__state state--next">planned</span><div><b>Proxy health checker</b><p>Parallel connectivity and anonymity tests before a campaign.</p></div><span class="road__v">v1.2</span></div>
+      <div class="road reveal" data-delay="1"><span class="road__state state--next">exploring</span><div><b>Web dashboard</b><p>Read-only FastAPI + React view of runs and pool health.</p></div><span class="road__v">v2.0</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Questions</span>
+      <h2 class="title">Before you install</h2>
+    </div>
+
+    <div class="faq">
+      <details class="qa reveal" open>
+        <summary>What is this actually for?</summary>
+        <div class="qa__body">Validating analytics, testing SEO assumptions and load-checking tracking on sites you own or are authorized to test. It is a lab instrument — treat it like one.</div>
+      </details>
+      <details class="qa reveal" data-delay="1">
+        <summary>Do I need a server or cloud account?</summary>
+        <div class="qa__body">No. It’s a desktop app. Everything — proxies, keywords, comment and email libraries — lives in local folders inside the project.</div>
+      </details>
+      <details class="qa reveal" data-delay="2">
+        <summary>How many proxies do I need?</summary>
+        <div class="qa__body">Five to ten healthy nodes is a sane start for small batches. For thousands of sessions a day, a larger residential pool with rotation is strongly recommended.</div>
+      </details>
+      <details class="qa reveal" data-delay="3">
+        <summary>Does headless mode work?</summary>
+        <div class="qa__body">Yes. Toggle “Headless” and Chrome runs invisibly — better throughput for long batches. Keep it off when you’re debugging a flow, so you can watch what happens.</div>
+      </details>
+      <details class="qa reveal">
+        <summary>What happens if a proxy fails?</summary>
+        <div class="qa__body">The session fails, the error is logged, and the runner continues with the next session index — which maps to a different proxy in the pool. One dead node never halts a campaign.</div>
+      </details>
+      <details class="qa reveal" data-delay="1">
+        <summary>Which search engines are supported?</summary>
+        <div class="qa__body">Google, Bing, Yahoo and DuckDuckGo are wired in. Yandex and Baidu are on the roadmap.</div>
+      </details>
+      <details class="qa reveal" data-delay="2">
+        <summary>Is Telegram required?</summary>
+        <div class="qa__body">No — the desktop UI works on its own. Telegram adds remote <code>/run</code> control and run reports when you’re away from the machine.</div>
+      </details>
+      <details class="qa reveal" data-delay="3">
+        <summary>Is it free?</summary>
+        <div class="qa__body">The source is MIT-licensed and free to use. You provide your own proxies, which are the only real running cost.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section">
+  <div class="shell">
+    <div class="cta reveal">
+      <span class="eyebrow" style="justify-content:center">Open source · MIT</span>
+      <h2>Give it a real proxy pool and a target you own.</h2>
+      <p>Clone it, run it, break it, send a pull request. The whole pipeline is a few thousand lines of readable Node.js.</p>
+      <div class="cta__actions">
+        <a class="btn btn--primary" href="https://github.com/zougar99/traffic-bot" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          Star on GitHub
+        </a>
+        <a class="btn btn--ghost" href="https://github.com/zougar99/traffic-bot/blob/main/README.md" target="_blank" rel="noopener">Read the docs</a>
+        <a class="btn btn--ghost" href="https://t.me/werlist99" target="_blank" rel="noopener">Talk to the developer</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="#top">
+          <img class="brand__mark" src="assets/icon.svg" alt="" width="34" height="34">
+          <span class="brand__name">Traffic<span>Bot</span></span>
+        </a>
+        <p>A self-hosted desktop traffic lab for SEO testing and analytics validation. Built with Electron and Selenium.</p>
+        <div class="socials" style="margin-top:18px">
+          <a href="https://github.com/zougar99/traffic-bot" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          </a>
+          <a href="https://t.me/werlist99" target="_blank" rel="noopener" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.7.8l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.4 8-7.2c.3-.3-.1-.5-.5-.2L6.5 12.9 2.2 11.5c-1-.3-1-1 .2-1.4L20 3.6c.8-.3 1.5.2 1.2 1.4Z"/></svg>
+          </a>
+          <a href="https://werlist99.blogspot.com/" target="_blank" rel="noopener" aria-label="Blog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h6a6 6 0 0 0 6-6V5"/><path d="M4 15h3"/><path d="M4 11h3"/><circle cx="18.5" cy="18.5" r="2"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#modes">Modes</a></li>
+          <li><a href="#lab">Live lab</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://github.com/zougar99/traffic-bot#readme" target="_blank" rel="noopener">Documentation</a></li>
+          <li><a href="#install">Installation</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://github.com/zougar99/traffic-bot/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/zougar99/traffic-bot" target="_blank" rel="noopener">Source code</a></li>
+          <li><a href="https://github.com/zougar99/traffic-bot/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
+          <li><a href="https://github.com/zougar99/traffic-bot/blob/main/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://t.me/werlist99" target="_blank" rel="noopener">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span id="year">© 2026 Traffic Bot</span>
+      <p class="disc">For educational use and testing on properties you own or are authorized to test. You are responsible for complying with the terms of service of any site you interact with.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+  <span id="toastText">Copied</span>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
