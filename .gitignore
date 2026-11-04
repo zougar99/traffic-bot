@@ -7,3 +7,6 @@ telegram.config.json
 !/proxy/pool.example.txt
 /email/*
 !/email/emails.example.txt
+
+# python tooling artifacts
+__pycache__/
