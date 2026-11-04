@@ -1,25 +1,54 @@
-# Traffic Bot — website
+# Traffic Bot — website (v2)
 
-Static marketing site for the Traffic Bot desktop app. Plain HTML, CSS and JavaScript — no build step, no dependencies.
+Static marketing site for the Traffic Bot desktop app. Plain HTML, CSS and JavaScript — no build step, no dependencies, no cookies.
 
 ```
 site/
-├── index.html          # single-page site
-├── styles.css          # design system + layout
-├── script.js           # interactions, live lab simulator
+├── index.html        # single-page site
+├── styles.css        # design tokens, themes, components
+├── script.js         # interactions, hero console, timeline, live lab
 ├── robots.txt
 ├── sitemap.xml
 └── assets/
-    ├── icon.svg        # app mark (favicon, logo)
-    ├── logo.svg        # wordmark
-    └── og-card.png     # social preview image (1200×630)
+    ├── icon.svg      # app mark (favicon + logo)
+    ├── logo.svg      # wordmark
+    └── og-card.png   # social preview 1200×630
 ```
+
+## What's on the page
+
+| Section | Interaction |
+|---------|-------------|
+| Hero | live "session console" that streams simulated proxy events |
+| Features | 9-tile bento grid with a proxy pool mini-table |
+| Modes | Direct / Google / Proxy tabs with per-mode flow and CLI hint |
+| Session | 5-stage timeline that plays while in view |
+| Live lab | simulator: sessions, pool size, pause, mode, success chart |
+| Telegram | chat mock with `/run`, `/status`, checkpoints |
+| Install | tabbed snippets with copy-to-clipboard |
+| Roadmap / FAQ / CTA | static with reveal-on-scroll |
+
+## Design system
+
+- Tokens in `:root` (`styles.css`) — colours, radii, spacing, motion.
+- **Two themes**: dark (default) and light, driven by `html[data-theme]`.
+  The choice is stored in `localStorage` under `tb:theme` and falls back to
+  `prefers-color-scheme`. A tiny inline script applies it before first paint.
+- Typography: Space Grotesk (display), Inter (body), JetBrains Mono (code/UI labels).
+- Motion respects `prefers-reduced-motion`; the timeline and console freeze to a
+  static state.
 
 ## Local preview
 
 ```bash
 python3 -m http.server 4180 --directory site
 # → http://localhost:4180
+```
+
+The app also exposes it through npm:
+
+```bash
+npm run site
 ```
 
 ## Deploy
@@ -44,7 +73,7 @@ After a minute the site is live at **https://zougar99.github.io/traffic-bot/**
 
 ## Editing notes
 
-- Colors, spacing and radii live in the `:root` token block at the top of `styles.css`.
-- Sections in `index.html` are in reading order and each one carries a `.reveal` class for scroll animation.
-- The "Live lab" simulator in `script.js` is a self-contained model: it never performs network calls.
-- The GitHub star counter calls the public GitHub API once per hour and caches the result in `localStorage`; it fails silently offline.
+- The only network request at runtime is the GitHub star count
+  (`api.github.com`), cached for one hour and silently skipped if offline.
+- The live lab never leaves the browser; it is a deterministic-ish model, not a runner.
+- Simulated IPs and timings are placeholders — do not read them as benchmarks.
