@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 236 48" role="img" aria-label="Traffic Bot">
+  <defs>
+    <linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="30" width="7" height="12" rx="2" fill="url(#g)"/>
+  <rect x="16" y="22" width="7" height="20" rx="2" fill="url(#g)"/>
+  <rect x="28" y="12" width="7" height="30" rx="2" fill="url(#g)"/>
+  <text x="46" y="30" fill="#e6edf3" font-family="Segoe UI,Inter,system-ui,sans-serif" font-size="17" font-weight="800" letter-spacing="0.02em">Traffic<tspan fill="url(#g)">Bot</tspan></text>
+  <text x="47" y="42" fill="#8b949e" font-family="Segoe UI,Inter,system-ui,sans-serif" font-size="7" font-weight="600" letter-spacing="0.28em">TRAFFIC LAB</text>
+</svg>

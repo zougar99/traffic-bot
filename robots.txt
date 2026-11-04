@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zougar99.github.io/traffic-bot/sitemap.xml
