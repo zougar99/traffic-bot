@@ -24,9 +24,10 @@ site/
 | Modes | Direct / Google / Proxy tabs with per-mode flow and CLI hint |
 | Session | 5-stage timeline that plays while in view |
 | Live lab | simulator: sessions, pool size, pause, mode, success chart |
-| Telegram | chat mock with `/run`, `/status`, checkpoints |
+| Telegram | chat mock with `/run`, `/status`, `/health`, checkpoints |
+| Rank Tracker Pro | 6-tile grid for the self-hosted SEO dashboard |
 | Install | tabbed snippets with copy-to-clipboard |
-| Roadmap / FAQ / CTA | static with reveal-on-scroll |
+| Roadmap / FAQ / CTA | static with reveal-on-scroll (recorder, proxy health and rank tracker marked shipped) |
 
 ## Design system
 
