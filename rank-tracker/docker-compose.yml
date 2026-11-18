@@ -1,0 +1,14 @@
+services:
+  rank-tracker:
+    build: .
+    container_name: rank-tracker
+    ports:
+      - "4170:4170"
+    env_file:
+      - .env
+    volumes:
+      - rt-data:/data
+    restart: unless-stopped
+
+volumes:
+  rt-data:

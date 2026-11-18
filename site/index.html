@@ -78,6 +78,7 @@
         <li><a class="nav__link" href="#modes">Modes</a></li>
         <li><a class="nav__link" href="#session">Session</a></li>
         <li><a class="nav__link" href="#lab">Live lab</a></li>
+        <li><a class="nav__link" href="#rank-tracker">Rank Tracker</a></li>
         <li><a class="nav__link" href="#telegram">Telegram</a></li>
         <li><a class="nav__link" href="#install">Install</a></li>
       </ul>
@@ -600,6 +601,70 @@ socks5://5.6.7.8:1080
   </div>
 </section>
 
+<!-- ================= RANK TRACKER ================= -->
+<section class="section section--tight" id="rank-tracker">
+  <div class="shell">
+    <div class="head reveal">
+      <span class="eyebrow">Second product</span>
+      <h2 class="title">Rank Tracker Pro</h2>
+      <p class="lede">The other half of the lab: a self-hosted dashboard that watches your positions while the desktop app measures the traffic. One folder, one SQLite file, zero npm dependencies.</p>
+    </div>
+
+    <div class="rt-grid">
+      <article class="tile reveal">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 4 4-7 5 5"/><path d="M3 21h18"/></svg>
+        </div>
+        <h3>Positions that move</h3>
+        <p>Google, Bing, Yahoo and DuckDuckGo per keyword, daily history, real deltas, biggest risers and fallers.</p>
+      </article>
+      <article class="tile reveal" data-d="1">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="15" r="3"/><path d="M11 9h4a2 2 0 0 1 2 2v1"/><path d="M13 15H9a2 2 0 0 1-2-2v-1"/></svg>
+        </div>
+        <h3>Competitors &amp; visibility</h3>
+        <p>Add the domains you care about and see share of voice, SERP features and who owns each phrase.</p>
+      </article>
+      <article class="tile reveal" data-d="2">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3.5 10.9V17h7v-3.1A6 6 0 0 0 12 3Z"/><path d="M9 21h6"/></svg>
+        </div>
+        <h3>Alerts, not dashboards</h3>
+        <p>Drops, gains, lost rankings, cannibalisation and content decay — pushed to Telegram, Sheets or email.</p>
+      </article>
+      <article class="tile reveal">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
+        </div>
+        <h3>Content calendar</h3>
+        <p>Keywords clustered by intent, spread across weeks, with a brief generator for every target phrase.</p>
+      </article>
+      <article class="tile reveal" data-d="1">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+        </div>
+        <h3>Email hygiene</h3>
+        <p>Syntax, role accounts, disposables and DNS MX checks; signed unsubscribe links that need no database.</p>
+      </article>
+      <article class="tile reveal" data-d="2">
+        <div class="tile__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 7.9-8 9-4.8-1.1-8-4.5-8-9V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3>Spam shield</h3>
+        <p>Honeypot, timing, link density and word scoring on your own forms, plus rate limits and IP reputation.</p>
+      </article>
+    </div>
+
+    <div class="cli" style="margin-top:22px">
+      <span class="prompt">›</span> cd rank-tracker <span class="arg">&amp;&amp;</span> npm start <span class="arg">→</span> <span class="str">http://localhost:4170</span>
+    </div>
+    <p style="margin-top:14px;font-size:.82rem;color:var(--text-3)">
+      SQLite on disk · scrypt auth · 18 offline tests · Docker + systemd files ·
+      <a href="https://github.com/zougar99/traffic-bot/tree/main/rank-tracker" target="_blank" rel="noopener">source &amp; docs →</a>
+    </p>
+  </div>
+</section>
+
 <!-- ================= ROADMAP ================= -->
 <section class="section section--tight" id="roadmap">
   <div class="shell">
@@ -611,11 +676,12 @@ socks5://5.6.7.8:1080
 
     <ul class="road">
       <li class="reveal"><span class="state state--done">shipped</span><div><b>Desktop UI + core runner</b><p>Proxy rotation, three modes, engagement, Telegram control.</p></div><span class="v">v1.0</span></li>
-      <li class="reveal" data-d="1"><span class="state state--wip">in progress</span><div><b>Session recorder</b><p>HAR capture, screenshots and console logs per session.</p></div><span class="v">v1.1</span></li>
+      <li class="reveal"><span class="state state--done">shipped</span><div><b>Session recorder</b><p>Per-session folder: screenshots, event timeline and a HAR of every response.</p></div><span class="v">v1.1</span></li>
       <li class="reveal" data-d="2"><span class="state state--wip">in progress</span><div><b>Mobile user-agent profiles</b><p>Chrome mobile and Safari iOS fingerprints.</p></div><span class="v">v1.1</span></li>
       <li class="reveal" data-d="3"><span class="state state--next">planned</span><div><b>Keyword spinner</b><p>Synonym, typo and modifier variations for wider coverage.</p></div><span class="v">v1.2</span></li>
-      <li class="reveal"><span class="state state--next">planned</span><div><b>Proxy health checker</b><p>Parallel connectivity tests before a campaign starts.</p></div><span class="v">v1.2</span></li>
-      <li class="reveal" data-d="1"><span class="state state--next">exploring</span><div><b>Read-only web dashboard</b><p>Live view of runs and pool health from any device.</p></div><span class="v">v2.0</span></li>
+      <li class="reveal"><span class="state state--done">shipped</span><div><b>Proxy health checker</b><p>TCP + HTTP CONNECT / SOCKS5 handshake tests, scored and sorted before a campaign starts.</p></div><span class="v">v1.2</span></li>
+      <li class="reveal"><span class="state state--done">shipped</span><div><b>Rank Tracker Pro</b><p>A separate self-hosted dashboard: positions, competitors, alerts, budgets, reports.</p></div><span class="v">v2.0</span></li>
+      <li class="reveal" data-d="1"><span class="state state--next">exploring</span><div><b>Read-only run dashboard</b><p>Live view of desktop runs and pool health from any device.</p></div><span class="v">v2.1</span></li>
     </ul>
   </div>
 </section>
@@ -714,6 +780,7 @@ socks5://5.6.7.8:1080
           <li><a href="#features">Features</a></li>
           <li><a href="#modes">Modes</a></li>
           <li><a href="#lab">Live lab</a></li>
+          <li><a href="#rank-tracker">Rank Tracker Pro</a></li>
           <li><a href="#roadmap">Roadmap</a></li>
         </ul>
       </div>

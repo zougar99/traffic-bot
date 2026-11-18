@@ -10,3 +10,6 @@ telegram.config.json
 
 # python tooling artifacts
 __pycache__/
+
+# recorded sessions (screenshots, HAR, event logs)
+/sessions/

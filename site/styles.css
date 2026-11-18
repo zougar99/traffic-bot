@@ -729,6 +729,25 @@ html[data-theme="light"] .stream { background: #0b1220; }
   to { transform: translateX(-100%); }
 }
 
+/* ---------- rank tracker grid ---------- */
+.rt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.rt-grid .tile { padding: 22px 20px; }
+.rt-grid .tile h3 { font-size: 0.95rem; margin-bottom: 6px; }
+.rt-grid .tile p { font-size: 0.8rem; color: var(--text-3); line-height: 1.55; }
+
+@media (max-width: 900px) {
+  .rt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .rt-grid { grid-template-columns: 1fr; }
+}
+
 /* ---------- bento features ---------- */
 .bento {
   display: grid;

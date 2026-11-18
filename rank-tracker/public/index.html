@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rank Tracker Pro</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<div class="app" id="app" data-view="overview">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="side">
+    <div class="side__brand">
+      <span class="brand-mark">▲</span>
+      <span class="brand-name">Rank Tracker <b>Pro</b></span>
+    </div>
+
+    <nav class="side__nav" aria-label="Sections">
+      <button class="nav-item" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
+        Overview
+      </button>
+      <button class="nav-item" data-nav="positions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 4-5 3 3 5-7"/></svg>
+        Positions
+      </button>
+      <button class="nav-item" data-nav="keywords">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 6 6-6 6"/><path d="M13 18h7"/></svg>
+        Keywords
+      </button>
+      <button class="nav-item" data-nav="competitors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M15.5 20c0-2.2 1.4-3.6 3.5-3.6"/></svg>
+        Competitors
+      </button>
+      <button class="nav-item" data-nav="alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg>
+        Alerts <span class="badge" id="alertBadge" hidden>0</span>
+      </button>
+      <button class="nav-item" data-nav="brief">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M12 18v3"/><path d="m5.6 5.6 2.1 2.1"/><path d="m16.3 16.3 2.1 2.1"/><path d="M3 12h3"/><path d="M18 12h3"/><path d="m5.6 18.4 2.1-2.1"/><path d="m16.3 7.7 2.1-2.1"/></svg>
+        Content brief
+      </button>
+      <button class="nav-item" data-nav="activity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Activity
+      </button>
+      <button class="nav-item" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 9 4.6h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="side__foot">
+      <div class="who">
+        <span class="avatar" id="userInitial">U</span>
+        <div class="who__meta">
+          <b id="userName">—</b>
+          <small id="userEmail">—</small>
+        </div>
+      </div>
+      <button class="btn btn--ghost btn--sm btn--block" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="icon-btn only-mobile" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="site-picker">
+          <label class="sr-only" for="siteSelect">Tracked site</label>
+          <select id="siteSelect"></select>
+          <button class="icon-btn" id="addSiteBtn" title="Add site" aria-label="Add site">+</button>
+        </div>
+      </div>
+      <div class="topbar__right">
+        <span class="pill pill--muted" id="providerPill" title="SERP provider">provider: —</span>
+        <button class="btn btn--primary btn--sm" id="collectBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          Run check
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- ================= OVERVIEW ================= -->
+      <section class="view" data-view="overview">
+        <div class="kpis">
+          <div class="kpi"><small>Keywords</small><b id="kpiKeywords">0</b><span id="kpiSites">0 sites</span></div>
+          <div class="kpi"><small>Top 10</small><b id="kpiTop10">0</b><span>positions 1–10</span></div>
+          <div class="kpi"><small>Avg position</small><b id="kpiAvg">—</b><span>last 7 days</span></div>
+          <div class="kpi"><small>Unread alerts</small><b id="kpiAlerts">0</b><span id="kpiAlertsHint">all clear</span></div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Top movers</h2><span class="hint">last 30 days</span></div>
+            <div id="movers" class="list"></div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h2>Share of voice</h2><span class="hint">competitors</span></div>
+            <div id="sov" class="bars"></div>
+          </div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Latest alerts</h2><a class="link" href="#alerts" data-goto="alerts">view all</a></div>
+            <div id="latestAlerts" class="list"></div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h2>SERP features</h2><span class="hint">30 days</span></div>
+            <div id="features" class="chips"></div>
+            <div class="card__head" style="margin-top:18px"><h2>Cannibalisation</h2></div>
+            <div id="cannibal" class="list list--tight"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= POSITIONS ================= -->
+      <section class="view" data-view="positions" hidden>
+        <div class="card">
+          <div class="card__head">
+            <h2>Rankings</h2>
+            <div class="tools">
+              <input id="posFilter" class="input input--sm" placeholder="Filter keyword…" aria-label="Filter keywords">
+              <select id="posDays" class="input input--sm">
+                <option value="7">7 days</option>
+                <option value="30" selected>30 days</option>
+                <option value="90">90 days</option>
+              </select>
+              <button class="btn btn--ghost btn--sm" id="exportCsv">Export CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="posTable">
+              <thead>
+                <tr><th>Keyword</th><th>Intent</th><th>Engine</th><th class="num">Position</th><th class="num">Δ</th><th>URL</th><th>Checked</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="historyCard" hidden>
+          <div class="card__head">
+            <h2 id="historyTitle">History</h2>
+            <button class="btn btn--ghost btn--sm" id="historyClose">Close</button>
+          </div>
+          <div class="spark" id="historyChart"></div>
+        </div>
+      </section>
+
+      <!-- ================= KEYWORDS ================= -->
+      <section class="view" data-view="keywords" hidden>
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Add keywords</h2><span class="hint">one per line</span></div>
+            <form id="kwForm" class="stack">
+              <textarea id="kwInput" class="input" rows="7" placeholder="best seo tools&#10;how to rank on google&#10;seo audit checklist"></textarea>
+              <div class="engine-picker" id="enginePicker">
+                <label><input type="checkbox" value="google" checked> Google</label>
+                <label><input type="checkbox" value="bing"> Bing</label>
+                <label><input type="checkbox" value="yahoo"> Yahoo</label>
+                <label><input type="checkbox" value="duckduckgo"> DuckDuckGo</label>
+              </div>
+              <button class="btn btn--primary" type="submit">Add keywords</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card__head">
+              <h2>Tracked keywords</h2>
+              <button class="btn btn--ghost btn--sm" id="clusterBtn">Auto-cluster</button>
+            </div>
+            <div id="kwList" class="list list--tight scroll"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= COMPETITORS ================= -->
+      <section class="view" data-view="competitors" hidden>
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Add competitor</h2></div>
+            <form id="compForm" class="row">
+              <input id="compInput" class="input" placeholder="competitor.com" aria-label="Competitor domain">
+              <button class="btn btn--primary" type="submit">Add</button>
+            </form>
+            <div id="compList" class="chips" style="margin-top:16px"></div>
+          </div>
+          <div class="card">
+            <div class="card__head"><h2>Visibility</h2><span class="hint">share of voice</span></div>
+            <div id="compBars" class="bars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ALERTS ================= -->
+      <section class="view" data-view="alerts" hidden>
+        <div class="card">
+          <div class="card__head">
+            <h2>Alerts</h2>
+            <div class="tools">
+              <button class="btn btn--ghost btn--sm" id="testDelivery">Test delivery</button>
+              <button class="btn btn--ghost btn--sm" id="markRead">Mark all read</button>
+            </div>
+          </div>
+          <div id="alertList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- ================= BRIEF ================= -->
+      <section class="view" data-view="brief" hidden>
+        <div class="card">
+          <div class="card__head"><h2>Content brief generator</h2><span class="hint">SERP-driven</span></div>
+          <form id="briefForm" class="row">
+            <input id="briefInput" class="input" placeholder="e.g. seo audit checklist" aria-label="Keyword for brief">
+            <select id="briefEngine" class="input input--sm">
+              <option value="google">Google</option>
+              <option value="bing">Bing</option>
+              <option value="yahoo">Yahoo</option>
+              <option value="duckduckgo">DuckDuckGo</option>
+            </select>
+            <button class="btn btn--primary" type="submit">Generate</button>
+          </form>
+        </div>
+        <div id="briefOut" class="grid grid--2"></div>
+      </section>
+
+      <!-- ================= ACTIVITY ================= -->
+      <section class="view" data-view="activity" hidden>
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Collection runs</h2></div>
+            <div class="table-wrap">
+              <table class="table" id="runsTable">
+                <thead><tr><th>#</th><th>Trigger</th><th class="num">OK</th><th class="num">Errors</th><th>Status</th><th>Started</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__head"><h2>Deliveries</h2></div>
+            <div class="table-wrap">
+              <table class="table" id="delivTable">
+                <thead><tr><th>Channel</th><th>Status</th><th>Detail</th><th>When</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__head"><h2>Audit log</h2></div>
+          <div class="table-wrap">
+            <table class="table" id="auditTable">
+              <thead><tr><th>Action</th><th>Target</th><th>IP</th><th>When</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SETTINGS ================= -->
+      <section class="view" data-view="settings" hidden>
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="card__head"><h2>Profile</h2></div>
+            <form id="profileForm" class="stack">
+              <label>Name<input id="setName" class="input"></label>
+              <label>Timezone<input id="setTz" class="input" placeholder="UTC"></label>
+              <button class="btn btn--primary" type="submit">Save</button>
+            </form>
+            <div class="card__head" style="margin-top:22px"><h2>API key</h2></div>
+            <p class="hint">Use it as <code>Authorization: Bearer …</code> to trigger runs from cron or Sheets.</p>
+            <div class="row">
+              <input id="apiKey" class="input input--mono" readonly>
+              <button class="btn btn--ghost btn--sm" id="copyKey">Copy</button>
+              <button class="btn btn--ghost btn--sm" id="rotateKey">Rotate</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h2>Password</h2></div>
+            <form id="pwForm" class="stack">
+              <label>Current password<input id="pwCurrent" type="password" class="input" autocomplete="current-password"></label>
+              <label>New password<input id="pwNew" type="password" class="input" minlength="10" autocomplete="new-password"></label>
+              <button class="btn btn--primary" type="submit">Change password</button>
+            </form>
+
+            <div class="card__head" style="margin-top:22px"><h2>Integrations</h2></div>
+            <div id="integrationList" class="list list--tight"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- add site modal -->
+<dialog id="siteDialog" class="dialog">
+  <form id="siteForm" method="dialog" class="stack">
+    <h2>Add a site</h2>
+    <label>Domain<input id="siteDomain" class="input" placeholder="your-site.com" required></label>
+    <label>Label<input id="siteLabel" class="input" placeholder="Main site"></label>
+    <div class="row">
+      <label style="flex:1">Country<input id="siteCountry" class="input" value="us" maxlength="2"></label>
+      <label style="flex:1">Language<input id="siteLanguage" class="input" value="en" maxlength="5"></label>
+    </div>
+    <div class="row row--end">
+      <button class="btn btn--ghost" type="button" id="siteCancel">Cancel</button>
+      <button class="btn btn--primary" type="submit">Add site</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -298,6 +298,27 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0}
                 </div>
             </div>
 
+            <div class="section">
+                <div class="section-title">Budget &amp; Recording</div>
+                <div class="input-group">
+                    <span class="input-group-text">Max min</span>
+                    <input type="text" id="budget-maxmin" class="form-control" value="120">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">Max fail</span>
+                    <input type="text" id="budget-maxfail" class="form-control" value="0">
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="session-record">
+                    <label class="form-check-label" for="session-record">Record sessions (screenshots + HAR)</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="session-screenshots" checked>
+                    <label class="form-check-label" for="session-screenshots">Screenshots</label>
+                </div>
+                <p id="sessions-summary" class="text-center small text-muted mb-0"></p>
+            </div>
+
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" id="start">▶ Start</button>
                 <button type="button" class="btn btn-danger" id="stop">■ Stop</button>
@@ -307,6 +328,8 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0}
             <div class="text-center small fw-bold mb-2 section-title">Tools</div>
             <div class="toolbar mb-2">
                 <button type="button" class="btn btn-secondary" id="tool-refresh-proxy">Proxies</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-proxy-health">Health</button>
+                <button type="button" class="btn btn-outline-secondary" id="tool-sessions">Sessions</button>
                 <button type="button" class="btn btn-secondary" id="tool-open-folder">Proxy folder</button>
                 <button type="button" class="btn btn-outline-secondary" id="tool-open-comments">Comments</button>
                 <button type="button" class="btn btn-outline-secondary" id="tool-clear">Clear</button>

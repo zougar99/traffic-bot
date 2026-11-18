@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const seobot = require('./libs/index')
 const proxys = require('./libs/proxy')
+const proxyHealth = require('./libs/proxyHealth')
 const loadEmails = require('./libs/email')
 const loadComments = require('./libs/comments')
 const { app, BrowserWindow, ipcMain, shell, clipboard, Menu, dialog } = require('electron')
@@ -105,6 +106,65 @@ ipcMain.handle('start', async (event, urls, keyboard, count, option, engage, ses
 
 ipcMain.handle('stop', async (event) => {
     seobot.stop()
+})
+
+ipcMain.handle('proxyHealth', async (event, entries) => {
+    try {
+        const list = Array.isArray(entries) && entries.length ? entries : await proxys()
+        const report = await proxyHealth.testPool(list, { concurrency: 10, timeoutMs: 6000 })
+        return { ok: true, report }
+    } catch (err) {
+        return { ok: false, error: err && err.message ? err.message : String(err) }
+    }
+})
+
+ipcMain.handle('sessionsRoot', async () => {
+    const dir = path.join(__dirname, 'sessions')
+    await fs.promises.mkdir(dir, { recursive: true })
+    return dir
+})
+
+ipcMain.handle('openSessionsFolder', async () => {
+    const dir = path.join(__dirname, 'sessions')
+    await fs.promises.mkdir(dir, { recursive: true })
+    const err = await shell.openPath(dir)
+    return err || null
+})
+
+ipcMain.handle('sessionsSummary', async () => {
+    const root = path.join(__dirname, 'sessions')
+    const out = { runs: 0, sessions: 0, screenshots: 0, bytes: 0, latest: null }
+    try {
+        const runs = await fs.promises.readdir(root)
+        out.runs = runs.length
+        const newest = runs
+            .map((name) => ({ name, dir: path.join(root, name) }))
+            .sort((a, b) => String(b.name).localeCompare(String(a.name)))[0]
+        if (newest) out.latest = newest.name
+        const walk = async (dir) => {
+            let entries
+            try {
+                entries = await fs.promises.readdir(dir, { withFileTypes: true })
+            } catch {
+                return
+            }
+            for (const entry of entries) {
+                const full = path.join(dir, entry.name)
+                if (entry.isDirectory()) {
+                    out.sessions += 1
+                    await walk(full)
+                } else {
+                    try {
+                        const st = await fs.promises.stat(full)
+                        out.bytes += st.size
+                        if (entry.name.endsWith('.png')) out.screenshots += 1
+                    } catch {}
+                }
+            }
+        }
+        await walk(root)
+    } catch (e) {}
+    return out
 })
 
 ipcMain.handle('proxylist', async (event) => {
