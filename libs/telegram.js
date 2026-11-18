@@ -1,6 +1,8 @@
 const { Telegraf } = require('telegraf')
 const seobot = require('./index')
 const loadproxy = require('./proxy')
+const loadEmails = require('./email')
+const proxyHealth = require('./proxyHealth')
 const { escapeHtml, loadConfig } = require('./telegramConfig')
 const { notifyTestPing } = require('./telegramNotify')
 const pkg = require('../package.json')
@@ -134,7 +136,8 @@ function startTelegramBot() {
             ...devHelp,
             '<b>Commandes</b>',
             '/myid — ID Telegram → <code>allowedChatIds</code>',
-            '/status — lignes proxy chargées',
+            '/status — proxies + état du run',
+            '/health — tester les proxies',
             '/stop — arrêt des sessions',
             '/testnotify — envoie un message test (comme le bouton Start)',
             '',
@@ -171,11 +174,52 @@ function startTelegramBot() {
         try {
             const list = await loadproxy()
             const n = list.length
+            const emails = await loadEmails()
+            const running = typeof seobot.isRunning === 'function' && seobot.isRunning()
             return replyHtml(ctx, [
-                '📊 <b>Proxies</b>',
+                '📊 <b>État</b>',
                 '',
-                `✅ <b>${escapeHtml(String(n))}</b> lignes chargées dans le dossier <code>proxy/</code>`
+                `⚙️ <b>Run</b> — ${running ? 'en cours' : 'au repos'}`,
+                `✅ <b>${escapeHtml(String(n))}</b> lignes proxy dans <code>proxy/</code>`,
+                `📧 <b>${escapeHtml(String(emails.length))}</b> adresses dans <code>email/</code>`,
+                '',
+                '<code>/health</code> — tester les proxies (⚡️ lent)',
+                '<code>/health 25</code> — tester seulement 25 lignes'
             ])
+        } catch (e) {
+            return replyHtml(ctx, ['❌ <b>Erreur</b>', '', escapeHtml(e.message || String(e))])
+        }
+    })
+
+    bot.command('health', async (ctx) => {
+        if (!isAllowed(config, ctx)) {
+            return replyHtml(ctx, ['⛔ <b>Accès refusé</b>', '', 'Ajoute ton chat ID dans <code>allowedChatIds</code>.'])
+        }
+        try {
+            const all = await loadproxy()
+            if (!all.length) {
+                return replyHtml(ctx, ['⚠️ <b>Aucun proxy</b>', '', 'Ajoute des lignes dans le dossier <code>proxy/</code>.'])
+            }
+            const asked = parseInt(String(ctx.message.text || '').split(/\s+/)[1] || '', 10)
+            const sample = Number.isFinite(asked) && asked > 0 ? all.slice(0, asked) : all
+            await ctx.reply(`🩺 Test de ${sample.length} proxy(s)…`)
+            const report = await proxyHealth.testPool(sample, { concurrency: 10, timeoutMs: 6000 })
+            const top = report.results
+                .slice(0, 10)
+                .map((r) =>
+                    r.ok
+                        ? `● <code>${escapeHtml(r.host + ':' + r.port)}</code> — ${r.ms}ms (${r.score})`
+                        : `○ <code>${escapeHtml(r.host + ':' + r.port)}</code> — ${escapeHtml(r.error || 'down')}`
+                )
+            const lines = [
+                '🩺 <b>Proxy health</b>',
+                '',
+                `✅ <b>${report.alive}/${report.total}</b> en vie · ⏱ ${report.averageMs}ms de moyenne`,
+                '',
+                ...top
+            ]
+            if (report.total > top.length) lines.push(`… ${report.total - top.length} de plus`)
+            return replyHtml(ctx, lines)
         } catch (e) {
             return replyHtml(ctx, ['❌ <b>Erreur</b>', '', escapeHtml(e.message || String(e))])
         }
@@ -190,7 +234,11 @@ function startTelegramBot() {
             return replyHtml(ctx, ['⚠️ <b>Commande invalide</b>', '', escapeHtml(parsed.error)])
         }
         try {
-            seobot.main([parsed.url], parsed.keyboard, parsed.count, parsed.option, parsed.engage, {})
+            seobot.main([parsed.url], parsed.keyboard, parsed.count, parsed.option, parsed.engage, {
+                maxRuntimeMin: 60,
+                maxFailures: 5,
+                record: false
+            })
             const lines = [
                 '🚀 <b>Session lancée</b>',
                 '',

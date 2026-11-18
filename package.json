@@ -19,7 +19,8 @@
     "dev": "electron . --enable-logging",
     "test": "node scripts/smoke.js",
     "test:telegram": "node scripts/test-telegram.js",
-    "site": "python3 -m http.server 4180 --directory site"
+    "site": "python3 -m http.server 4180 --directory site",
+    "proxies:health": "node --no-warnings scripts/proxy-health.js"
   },
   "author": "werlist99",
   "developer": {

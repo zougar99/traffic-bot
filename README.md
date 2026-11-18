@@ -17,6 +17,7 @@
 
 ## 📖 Table of contents
 
+- [Rank Tracker Pro](#-rank-tracker-pro-new)
 - [Features](#-features)
 - [How it works](#-how-it-works)
 - [Tech stack](#-tech-stack)
@@ -33,6 +34,33 @@
 - [Troubleshooting](#-troubleshooting)
 - [Contributing](#-contributing)
 - [License](#-license)
+
+---
+
+## 🆕 Rank Tracker Pro
+
+`rank-tracker/` is a second product in this repo: a self-hosted, **zero-dependency**
+SEO rank tracker with its own dashboard, API, tests and deploy files.
+
+```bash
+cd rank-tracker && npm start     # → http://localhost:4170
+```
+
+Track positions on Google / Bing / Yahoo / DuckDuckGo, watch competitors, catch
+drops the day they happen, plan content from keyword clusters, verify email
+lists, score form spam and health-check your own site. SQLite on disk, no npm
+install, no SaaS bill.
+
+**→ [`rank-tracker/README.md`](rank-tracker/README.md)** · [deploy](rank-tracker/docs/deploy.md) · [email](rank-tracker/docs/email.md) · [shield](rank-tracker/docs/shield.md)
+
+### Also new in the desktop app
+
+| Addition | Where |
+| --- | --- |
+| Proxy health checker (TCP + HTTP CONNECT / SOCKS5 handshake, scored) | `libs/proxyHealth.js`, **Health** button, `npm run proxies:health` |
+| Session recorder (screenshots + events + HAR per session) | `libs/recorder.js`, **Record sessions** toggle |
+| Hard budgets + failure circuit breaker | `libs/budget.js`, **Budget & Recording** panel |
+| `/health` and richer `/status` on Telegram | `libs/telegram.js` |
 
 ---
 
@@ -327,3 +355,28 @@ Keep changes focused, describe the behaviour you changed, and test on Chrome bef
 MIT — see [LICENSE](LICENSE).
 
 > For educational and testing purposes. You are responsible for how you use it.
+
+## 🧪 Development
+
+```bash
+npm test            # syntax + loader + module smoke checks (no browser)
+npm run proxies:health -- --file proxy/pool.txt   # check proxies without Chrome
+node scripts/smoke.js
+```
+
+The Rank Tracker lives in its own folder with its own `package.json`:
+
+```bash
+cd rank-tracker && npm test      # 18 tests, node:test, offline
+```
+
+## 📚 Documentation index
+
+| Document | Contents |
+| --- | --- |
+| [`README.md`](README.md) | this file — desktop app |
+| [`rank-tracker/README.md`](rank-tracker/README.md) | rank tracker overview + API |
+| [`rank-tracker/docs/deploy.md`](rank-tracker/docs/deploy.md) | VPS, Docker, systemd, HTTPS, Sheets webhook, backups |
+| [`rank-tracker/docs/email.md`](rank-tracker/docs/email.md) | list verification, unsubscribe, sending |
+| [`rank-tracker/docs/shield.md`](rank-tracker/docs/shield.md) | spam scoring, rate limits, blocklist |
+| [`site/README.md`](site/README.md) | the public landing page |

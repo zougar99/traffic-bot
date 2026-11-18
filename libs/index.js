@@ -8,6 +8,8 @@ const loadEmails = require('./email')
 const loadComments = require('./comments')
 const spoofing = require('./spoofing')
 const tg = require('./telegramNotify')
+const { BudgetGuard, BudgetExceeded, fromSession } = require('./budget')
+const { SessionRecorder, describeDriver, performanceLoggingOptions } = require('./recorder')
 
 function normalizeEngage(e) {
     if (!e || typeof e !== 'object') return { like: false, comment: false, commentText: '' }
@@ -260,6 +262,38 @@ function clickPage(Driver, targetSiteUrl, pageId) {
     })
 }
 
+/**
+ * Wrap a session function so it can be recorded and budgeted.
+ * Returns { recorderDir } for logging.
+ */
+function makeRecorder(sessionOpts, runId, index, url, mode, proxy) {
+    if (!sessionOpts.record) return null
+    var rec = new SessionRecorder({
+        root: sessionOpts.recordDir || undefined,
+        runId: runId,
+        index: index,
+        screenshots: sessionOpts.screenshots !== false,
+        events: true
+    })
+    rec.set({ url: url || '', mode: mode || '', proxy: String(proxy || ''), headless: !!sessionOpts.headless })
+    return rec
+}
+
+async function finishRecording(rec, driver, ok, error) {
+    if (!rec) return
+    try {
+        if (driver) {
+            var info = await describeDriver(driver)
+            rec.set(info)
+            try {
+                var log = await driver.manage().logs().get('performance')
+                await rec.writeHar(log)
+            } catch (e) {}
+        }
+    } catch (e) {}
+    rec.finish(ok, error)
+}
+
 async function safeQuitDriver(driver) {
     if (!driver) return
     try {
@@ -272,14 +306,16 @@ async function safeQuitDriver(driver) {
     await delay(500)
 }
 
-async function Direct(url, proxy, headless, engage, timing, sessionEmail) {
+async function Direct(url, proxy, headless, engage, timing, sessionEmail, recorder) {
     var driver
+    var error = null
     try {
         var options = new chrome.Options()
         var px = normalizeProxy(proxy)
         if (px) options.addArguments('--proxy-server=' + px)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
+        if (recorder) options.setChromeLoggingPrefs(performanceLoggingOptions({}))
         driver = await new webDriver.Builder()
             .forBrowser('chrome')
             .setChromeService(chromedriver)
@@ -287,24 +323,39 @@ async function Direct(url, proxy, headless, engage, timing, sessionEmail) {
             .build()
         await Stealth(driver)
         await driver.get(url).then(async function () {
+            if (recorder) {
+                recorder.step('landed', url)
+                await recorder.screenshot(driver, 'landing')
+            }
             await delay(timing.afterLoadMs)
             await driver.executeScript(auto.scroll())
+            if (recorder) recorder.step('scroll')
             await delay(timing.dwellEngageMs)
             await auto.runEngagement(driver, engage, sessionEmail)
+            if (recorder) {
+                recorder.step('engaged', JSON.stringify(engage))
+                await recorder.screenshot(driver, 'final')
+            }
         })
+    } catch (e) {
+        error = e
+        throw e
     } finally {
+        await finishRecording(recorder, driver, !error, error)
         await safeQuitDriver(driver)
     }
 }
 
-async function googleSearch(url, keyboard, proxy, headless, engage, timing, sessionEmail) {
+async function googleSearch(url, keyboard, proxy, headless, engage, timing, sessionEmail, recorder) {
     var driver
+    var error = null
     try {
         var options = new chrome.Options()
         var px = normalizeProxy(proxy)
         if (px) options.addArguments('--proxy-server=' + px)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
+        if (recorder) options.setChromeLoggingPrefs(performanceLoggingOptions({}))
         driver = await new webDriver.Builder()
             .forBrowser('chrome')
             .setChromeService(chromedriver)
@@ -312,31 +363,53 @@ async function googleSearch(url, keyboard, proxy, headless, engage, timing, sess
             .build()
         await Stealth(driver)
         await driver.get(googleSearchResultsUrl(keyboard)).then(async function () {
+            if (recorder) {
+                recorder.step('serp', googleSearchResultsUrl(keyboard))
+                await recorder.screenshot(driver, 'serp')
+            }
             await delay(2000)
             var pageId = await findSiteUrl(driver, url)
+            if (recorder) recorder.step('found', 'position ' + pageId)
             await delay(2000)
             if (pageId == -1) pageId = await nextPage(driver, url)
             await delay(1000)
-            if (pageId < 0) return
+            if (pageId < 0) {
+                if (recorder) recorder.step('not-found')
+                return
+            }
             var ok = await clickPage(driver, url, pageId)
             if (ok) {
+                if (recorder) {
+                    recorder.step('clicked', 'result #' + (pageId + 1))
+                    await recorder.screenshot(driver, 'landing')
+                }
                 await delay(timing.dwellEngageMs)
                 await auto.runEngagement(driver, engage, sessionEmail)
+                if (recorder) {
+                    recorder.step('engaged', JSON.stringify(engage))
+                    await recorder.screenshot(driver, 'final')
+                }
             }
         })
+    } catch (e) {
+        error = e
+        throw e
     } finally {
+        await finishRecording(recorder, driver, !error, error)
         await safeQuitDriver(driver)
     }
 }
 
-async function proxyServer(url, proxy, keyboard, headless, engage, timing, sessionEmail) {
+async function proxyServer(url, proxy, keyboard, headless, engage, timing, sessionEmail, recorder) {
     var driver
+    var error = null
     try {
         var options = new chrome.Options()
         var px2 = normalizeProxy(proxy)
         if (px2) options.addArguments('--proxy-server=' + px2)
         applyChromeLaunchArgs(options, !!headless)
         options.excludeSwitches('enable-logging')
+        if (recorder) options.setChromeLoggingPrefs(performanceLoggingOptions({}))
         driver = await new webDriver.Builder()
             .forBrowser('chrome')
             .setChromeService(chromedriver)
@@ -354,17 +427,27 @@ async function proxyServer(url, proxy, keyboard, headless, engage, timing, sessi
             if (pageId < 0) return
             var ok2 = await clickPage(driver, url, pageId)
             if (ok2) {
+                if (recorder) {
+                    recorder.step('clicked', url)
+                    await recorder.screenshot(driver, 'landing')
+                }
                 await delay(timing.dwellEngageMs)
                 await auto.runEngagement(driver, engage, sessionEmail)
+                if (recorder) await recorder.screenshot(driver, 'final')
             }
         })
+    } catch (e) {
+        error = e
+        throw e
     } finally {
+        await finishRecording(recorder, driver, !error, error)
         await safeQuitDriver(driver)
     }
 }
 
 var usedDriver = 0
 var mainRunBusy = false
+var activeGuard = null
 
 async function main(urlInput, keyboard, count, option, engage, session, extras) {
     if (mainRunBusy) {
@@ -382,7 +465,11 @@ async function main(urlInput, keyboard, count, option, engage, session, extras) 
     }
     var sessionOpts = {
         useCommentFile: !!sess.useCommentFile,
-        useEmailRotate: sess.useEmailRotate !== false
+        useEmailRotate: sess.useEmailRotate !== false,
+        record: sess.record === true,
+        screenshots: sess.screenshots !== false,
+        recordDir: sess.recordDir || undefined,
+        headless: headless
     }
     var engageBase = normalizeEngage(engage)
     var urls = normalizeUrlList(urlInput)
@@ -398,6 +485,18 @@ async function main(urlInput, keyboard, count, option, engage, session, extras) 
     usedDriver = 0
 
     var totalSessions = urls.length * runCount
+    var guard = fromSession(
+        {
+            maxSessions: totalSessions,
+            maxRuntimeMin: sess.maxRuntimeMin,
+            maxFailures: sess.maxFailures,
+            maxFailRate: sess.maxFailRate
+        },
+        totalSessions
+    )
+    activeGuard = guard
+    var runId = sessionOpts.record ? String(sess.runId || totalSessions + '-' + Date.now()) : ''
+    if (sessionOpts.record) console.log('[REC] writing sessions to', sessionOpts.recordDir || './sessions', 'run', runId)
     if (notifyDesktop) {
         try {
             await tg.notifyDesktopRunStart({
@@ -429,7 +528,9 @@ async function main(urlInput, keyboard, count, option, engage, session, extras) 
                 sessionOpts,
                 emails,
                 comments,
-                pauseMs
+                pauseMs,
+                guard,
+                runId
             )
         } else {
             var round
@@ -448,7 +549,9 @@ async function main(urlInput, keyboard, count, option, engage, session, extras) 
                         sessionOpts,
                         emails,
                         comments,
-                        pauseMs
+                        pauseMs,
+                        guard,
+                        runId
                     )
                 }
             }
@@ -460,10 +563,16 @@ async function main(urlInput, keyboard, count, option, engage, session, extras) 
                 aborted: false
             })
         }
+        console.log('[RUN] done ·', guard.summary())
     } catch (err) {
-        if (notifyDesktop) await tg.notifyDesktopRunError(err)
-        throw err
+        if (err instanceof BudgetExceeded) {
+            console.warn('[RUN] stopped early ·', guard.summary())
+        } else {
+            if (notifyDesktop) await tg.notifyDesktopRunError(err)
+            throw err
+        }
     } finally {
+        if (activeGuard === guard) activeGuard = null
         mainRunBusy = false
     }
 }
@@ -480,33 +589,64 @@ async function runOneUrlBatch(
     sessionOpts,
     emails,
     comments,
-    pauseMs
+    pauseMs,
+    guard,
+    runId
 ) {
     var end = usedDriver + sessions
     var pList = proxy && proxy.length ? proxy : []
     while (usedDriver < end) {
+        if (guard) {
+            try {
+                guard.before()
+            } catch (e) {
+                if (e instanceof BudgetExceeded) {
+                    console.warn('[RUN]', e.message)
+                    break
+                }
+                throw e
+            }
+        }
         var p = pList.length ? pList[usedDriver % pList.length] : null
         var em = sessionOpts.useEmailRotate !== false && emails.length ? pickRoundRobin(emails, usedDriver) : ''
         var engage = makeEngage(engageBase, comments, sessionOpts, usedDriver)
+        var recorder = makeRecorder(sessionOpts, runId, usedDriver, url, option, p)
         console.log(
             option === 'Direct' ? '[DIRECT]: ' + url : option === 'Google' ? '[SEARCH]: ' + url : '[PROXY]: ' + url
         )
-        console.log('[session]', usedDriver, 'proxy=', p || '(none)', 'visible=' + (!headless ? 'yes' : 'no'), 'email=', em || '(none)')
+        console.log(
+            '[session]',
+            usedDriver,
+            'proxy=',
+            p || '(none)',
+            'visible=' + (!headless ? 'yes' : 'no'),
+            'email=',
+            em || '(none)',
+            recorder ? 'rec=' + recorder.dir : ''
+        )
+        var sessionOk = true
         try {
-            if (option === 'Direct') await Direct(url, p, headless, engage, timing, em)
-            else if (option === 'Google') await googleSearch(url, keyboard, p, headless, engage, timing, em)
-            else if (option === 'Proxy') await proxyServer(url, p, keyboard, headless, engage, timing, em)
+            if (option === 'Direct') await Direct(url, p, headless, engage, timing, em, recorder)
+            else if (option === 'Google') await googleSearch(url, keyboard, p, headless, engage, timing, em, recorder)
+            else if (option === 'Proxy') await proxyServer(url, p, keyboard, headless, engage, timing, em, recorder)
         } catch (e) {
+            sessionOk = false
             console.error('[session]', usedDriver, 'failed:', e && e.message ? e.message : e)
         }
+        if (guard) guard.onResult(sessionOk)
         usedDriver += 1
         if (usedDriver < end && pauseMs > 0) await delay(pauseMs)
     }
 }
 
-async function stop() {}
+async function stop() {
+    if (activeGuard) activeGuard.abort('stopped by user')
+}
 
 module.exports = {
     main: main,
-    stop: stop
+    stop: stop,
+    isRunning: function () {
+        return mainRunBusy
+    }
 }

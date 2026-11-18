@@ -246,7 +246,11 @@ $(document).ready(async function () {
             pauseBetweenSec: parseFloat($('#session-pause').val()) || 0,
             afterLoadSec: parseFloat($('#session-after-load').val()) || 1,
             dwellBeforeEngageSec: parseFloat($('#session-dwell').val()) || 2.5,
-            useCommentFile: useCommentFile
+            useCommentFile: useCommentFile,
+            record: $('#session-record').is(':checked'),
+            screenshots: $('#session-screenshots').is(':checked'),
+            maxRuntimeMin: parseFloat($('#budget-maxmin').val()) || 120,
+            maxFailures: parseInt(String($('#budget-maxfail').val() || '0').trim(), 10) || 0
         }
 
         saveFormState()
@@ -300,6 +304,10 @@ $(document).ready(async function () {
         $('#session-pause').val('0')
         $('#session-after-load').val('1')
         $('#session-dwell').val('2.5')
+        $('#session-record').prop('checked', false)
+        $('#session-screenshots').prop('checked', true)
+        $('#budget-maxmin').val('120')
+        $('#budget-maxfail').val('0')
         try {
             localStorage.removeItem(LS_KEY)
         } catch (e) {}
@@ -313,6 +321,39 @@ $(document).ready(async function () {
     })
     $('#tool-devtools').click(function () {
         window.wgtb.toggleDevTools()
+    })
+
+    $('#tool-proxy-health').click(async function () {
+        alertbox('Testing proxies…', 'secondary', 3000)
+        var r = await window.wgtb.proxyHealth([])
+        if (!r.ok) return alertbox(r.error || 'Health check failed', 'danger', 7000)
+        var rep = r.report
+        if (!rep.total) return alertbox('No proxies in proxy/ folder.', 'warning', 6000)
+        var lines = rep.results.slice(0, 20).map(function (row) {
+            var label = (row.host || '?') + ':' + (row.port || '?')
+            return (row.ok ? '● ' : '○ ') + label + ' — ' + (row.ok ? row.ms + 'ms (score ' + row.score + ')' : row.error)
+        })
+        alertbox(
+            '<b>' + rep.alive + '/' + rep.total + ' alive</b> · avg ' + rep.averageMs + 'ms<br>' +
+                '<span class="small" style="white-space:pre-line">' + lines.join('\n') + '</span>',
+            rep.alive ? 'success' : 'danger',
+            20000
+        )
+    })
+
+    async function refreshSessions() {
+        var s = await window.wgtb.sessionsSummary()
+        var mb = (s.bytes / (1024 * 1024)).toFixed(1)
+        $('#sessions-summary').text(
+            s.sessions ? s.runs + ' run(s) · ' + s.sessions + ' session(s) · ' + s.screenshots + ' shot(s) · ' + mb + ' MB' : 'No recorded sessions yet.'
+        )
+    }
+    await refreshSessions()
+
+    $('#tool-sessions').click(async function () {
+        var err = await window.wgtb.openSessionsFolder()
+        if (err) alertbox(err, 'danger', 5000)
+        else refreshSessions()
     })
 
     $('#tool-dev-telegram').click(async function () {

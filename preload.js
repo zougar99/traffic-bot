@@ -23,5 +23,9 @@ contextBridge.exposeInMainWorld('wgtb', {
     getEmailBreakdown: () => ipcRenderer.invoke('getEmailBreakdown'),
     commentsCount: () => ipcRenderer.invoke('commentsCount'),
     openCommentsFolder: () => ipcRenderer.invoke('openCommentsFolder'),
-    getCommentsBreakdown: () => ipcRenderer.invoke('getCommentsBreakdown')
+    getCommentsBreakdown: () => ipcRenderer.invoke('getCommentsBreakdown'),
+    proxyHealth: (entries) => ipcRenderer.invoke('proxyHealth', entries || []),
+    sessionsRoot: () => ipcRenderer.invoke('sessionsRoot'),
+    openSessionsFolder: () => ipcRenderer.invoke('openSessionsFolder'),
+    sessionsSummary: () => ipcRenderer.invoke('sessionsSummary')
 })

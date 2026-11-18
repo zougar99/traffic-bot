@@ -1,0 +1,61 @@
+name: Rank Tracker CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "rank-tracker/**"
+      - ".github/workflows/rank-tracker.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "rank-tracker/**"
+      - ".github/workflows/rank-tracker.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rank-tracker
+
+    strategy:
+      matrix:
+        # node:sqlite needs Node >= 22.5, so this project is tested on 22 and 24
+        node-version: [22.x, 24.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Versions
+        run: node --version && npm --version
+
+      - name: Tests
+        run: npm test
+
+      - name: Collect against the mock provider
+        run: |
+          npm run seed
+          npm run collect -- --site 1
+
+      - name: Smoke the HTTP API
+        run: |
+          node --no-warnings src/server.js &
+          SERVER=$!
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4170/api/health > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4170/api/health
+          curl -fsS http://127.0.0.1:4170/api/me
+          curl -fsS -o /dev/null -w "login page %{http_code}\n" http://127.0.0.1:4170/login
+          kill $SERVER
+        env:
+          SERP_PROVIDER: mock
+          SCHEDULER_ENABLED: "false"
+          DATA_DIR: ./data

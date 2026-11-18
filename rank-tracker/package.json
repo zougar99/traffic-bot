@@ -1,0 +1,19 @@
+{
+  "name": "traffic-bot-rank-tracker",
+  "private": true,
+  "type": "module",
+  "description": "Rank Tracker Pro — private SEO position tracking, SERP features, competitors, alerts, Sheets/Gmail reports.",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node --no-warnings src/server.js",
+    "dev": "node --no-warnings --watch src/server.js",
+    "test": "node --no-warnings --test test/*.test.js",
+    "seed": "node --no-warnings scripts/seed.js",
+    "create-user": "node --no-warnings scripts/create-user.js",
+    "collect": "node --no-warnings scripts/collect.js"
+  },
+  "dependencies": {}
+}
